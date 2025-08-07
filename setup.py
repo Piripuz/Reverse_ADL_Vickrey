@@ -8,6 +8,7 @@ setup(
     install_requires=[
         "numpy",
         "pandas",
+        "scipy",
         "matplotlib",
         "jax",
         "geopandas",

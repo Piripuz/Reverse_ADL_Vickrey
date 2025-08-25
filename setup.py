@@ -5,6 +5,7 @@ setup(
     version="0",
     packages=["vickrey"],
     python_requires=">=3.7",
+    package_data={"vickrey": ["data/*"]},
     install_requires=[
         "numpy",
         "pandas",

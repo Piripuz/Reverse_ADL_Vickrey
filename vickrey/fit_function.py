@@ -6,10 +6,15 @@ from scipy.optimize import curve_fit
 
 from jax import grad, vmap
 from jax import numpy as jnp
+from jax.scipy.stats import gennorm as jgennorm
 from jax.scipy.stats import norm as jnorm
 
 import jax
 jax.config.update('jax_enable_x64', True)
+
+def gennorm_pdf(x, beta, mu, sigma):
+    y = (x - mu) / sigma
+    return jgennorm.pdf(y, beta) / sigma
 
 def skewnorm_pdf(x, a, mu, sigma):
     pdf_unscaled = lambda x: 2 * jnorm.pdf(x) * jnorm.cdf(a*x)
@@ -135,9 +140,39 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             mu = {mu}\n\
             sigma = {sigma}\n\
             scale = {scale}\n\
-            offset = {off}\
+            offset = {off}\n\
             "
         )
         return lambda x: to_fit(x, a, mu, sigma, scale, off)
     elif kind == "generalized_gaussian":
-        raise NotImplementedError()
+        if init == None:
+            crit_left = x[(y > 1.5*y.min()).argmax()]
+            crit_right = x[len(y) - (y > 1.5*y.min())[::-1].argmax()]
+
+            beta_init = 2
+            mu_init = x[y.argmax()]
+            sigma_init = (crit_right - crit_left)/4
+            off_init = y[0]
+            scale_init = (y.max() - off_init) / gennorm_pdf(mu_init, beta_init, mu_init, sigma_init)
+        else:
+            beta_init, mu_init, sigma_init, scale_init, off_init = init
+
+        to_fit = lambda x, beta, mu, sigma, scale, off: gennorm_pdf(x, beta, mu, sigma)*scale + off
+        popt, _ = curve_fit(
+            to_fit,
+            x,
+            y,
+            [beta_init, mu_init, sigma_init, scale_init, off_init],
+        )
+        beta, mu, sigma, scale, off = popt
+        print(
+            f"\
+            Converged to:\n\
+            beta = {beta}\n\
+            mu = {mu}\n\
+            sigma = {sigma}\n\
+            scale = {scale}\n\
+            offset = {off}\n\
+            "
+        )
+        return lambda x: to_fit(x, beta, mu, sigma, scale, off)

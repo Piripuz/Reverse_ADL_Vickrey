@@ -1,4 +1,5 @@
 from importlib import resources
+import os
 
 import pandas as pd
 import geopandas as gpd
@@ -31,6 +32,27 @@ class RealData():
         if way not in ["N", "S", "E", "W"]:
             raise ValueError(f"{way} is not a valid road direction")
         
+        filename = resources.files("vickrey.data").joinpath("cache_travel_times", f"speeds_{route}_{way}.csv")
+        
+        # Check if the speeds for the route/way have already been
+        # generated
+        if os.path.isfile(filename):
+            tts = pd.read_csv(filename, index_col=0, parse_dates=True)
+            if tts.shape[1] != 1:
+                raise ValueError("Found wrong csv file. Please regenerate cash")
+            self.travel_times = pd.to_timedelta(tts.iloc[:, 0])
+        else:
+            self.travel_times = self._generate_speeds(route, way, filename)
+
+    def _generate_speeds(self, route, way, filename):
+        """Given a route and a direction, computes the travel times
+        at each available time point.
+
+        Returns a pandas series with the travel times, and saves it to
+        a file with the given filename.
+
+        """
+
         # Import speed data
         speeds = pd.read_hdf(resources.files("vickrey.data").joinpath("pems-bay.h5"))
         # Convert mph to kph
@@ -108,7 +130,10 @@ class RealData():
 
         # The final series is now sorted by its index
         arr_time = cur_time.sort_index()
-        self.travel_times = arr_time - arr_time.index
+        travel_times = arr_time - arr_time.index
+
+        travel_times.to_csv(filename)
+        return travel_times
 
     def tt_for_day(self, day):
         tt_minutes = self.travel_times.dt.seconds/60

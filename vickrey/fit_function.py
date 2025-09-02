@@ -3,14 +3,18 @@ import os
 import pandas as pd
 import numpy as np
 from scipy.optimize import curve_fit
-from scipy.stats import skewnorm, gennorm
 
 from jax import grad, vmap
 from jax import numpy as jnp
+from jax.scipy.stats import norm as jnorm
 
 import jax
 jax.config.update('jax_enable_x64', True)
 
+def skewnorm_pdf(x, a, mu, sigma):
+    pdf_unscaled = lambda x: 2 * jnorm.pdf(x) * jnorm.cdf(a*x)
+    y = (x - mu) / sigma
+    return pdf_unscaled(y) / sigma
 
 def left_hyp(a):
     return lambda x: (jnp.sqrt((x - a[2])**2 + a[0]) + x - a[2])/a[1]
@@ -112,11 +116,11 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             mu_init = x[y.argmax()]
             sigma_init = (crit_right - crit_left)/4
             off_init = y[0]
-            scale_init =  (y.max() - off_init) / skewnorm.pdf(mu_init, a_init, mu_init, sigma_init)
+            scale_init =  (y.max() - off_init) / skewnorm_pdf(mu_init, a_init, mu_init, sigma_init)
         else:
             a_init, mu_init, sigma_init, scale_init, off_init = init
 
-        to_fit = lambda x, a, mu, sigma, scale, off: skewnorm.pdf(x, a, mu, sigma)*scale + off
+        to_fit = lambda x, a, mu, sigma, scale, off: skewnorm_pdf(x, a, mu, sigma)*scale + off
         popt, _ = curve_fit(
             to_fit,
             x,

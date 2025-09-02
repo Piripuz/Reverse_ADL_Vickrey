@@ -9,7 +9,7 @@ setup(
     install_requires=[
         "numpy",
         "pandas",
-        "pytables",
+        "tables",
         "scipy",
         "matplotlib",
         "jax",

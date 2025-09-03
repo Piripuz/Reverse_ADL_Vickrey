@@ -15,10 +15,26 @@ from vickrey.likelihood.find_points import (
 
 
 def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
-    """Finds the likelihood of a point realizing a minimum, for the
-    travel time, beta, gamma and t* distributions determined by the
-    parameters.  Beta, gamma and t* are assumed to be normally
+    """Find the likelihood of a single data point.
+
+    Given the parameters, find the likelihood of a point realizing a minimum.
+    Beta, gamma and t* are assumed to be normally
     distributed.
+
+    Args:
+        travel_time: Instance of the TravelTime class the likelihood is
+            computed on
+        t_a: Time point of which the likelihood is computed
+        mu_b: Mean of the beta parameter, relative to the early arrival penalty
+        mu_g: Mean of the gamma parameter, relative to the late arrival penalty
+        mu_t: Mean of the t* parameter, relative to the desired arrival time
+        sigma: Variance of the beta and gamma distributions, that are assumed
+            to share the same variance
+        sigma_t: Variance of the t* parameter
+
+    Returns:
+        likelihood: float number representing the likelihood of an optimal
+            arrival being equal to t_a
 
     """
 

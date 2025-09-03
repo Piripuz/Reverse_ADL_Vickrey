@@ -1,9 +1,10 @@
 from jax import vmap
 from jax.nn import relu
-from jax.scipy.integrate import trapezoid
 from jax.scipy.stats import truncnorm as jtruncnorm
 from jax.scipy.stats import norm as jnorm
 import jax.numpy as jnp
+
+from quadax import quadgk
 
 from vickrey.likelihood.find_points import (
     find_b0,
@@ -96,9 +97,7 @@ def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
     def inner_int_early(x):
         return inner_int_early_cdf(x) * pdf_g(x)
 
-    x_gamma = jnp.linspace(1e-2, 10, 200)
-
-    int_early = trapezoid(vmap(inner_int_early)(x_gamma), x_gamma, axis=0)
+    int_early = quadgk(inner_int_early, (0, jnp.inf), epsabs=1e-3)[0]
     lik_early = (
         int_early * pdf_b(travel_time.df(t_a)) * relu(travel_time.d2f(t_a))
     )
@@ -116,9 +115,7 @@ def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
     def inner_int_late(x):
         return inner_int_late_cdf(x) * pdf_b(x)
 
-    x_beta = jnp.linspace(1e-2, 10, 200)
-
-    int_late = trapezoid(vmap(inner_int_late)(x_beta), x_beta, axis=0)
+    int_late = quadgk(inner_int_late, (0, jnp.inf), epsabs=1e-3)[0]
 
     lik_late = (
         int_late * pdf_g(-travel_time.df(t_a)) * relu(travel_time.d2f(t_a))

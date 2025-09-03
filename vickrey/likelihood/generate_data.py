@@ -90,4 +90,4 @@ def generate_arrival(
         random_state=random_gen,
     )
     ts = norm.rvs(mu_t, sigma_t, n, random_state=random_gen)
-    return betas, gammas, ts, vmap(find_td(travel_time))(betas, gammas, ts)
+    return vmap(find_td(travel_time))(betas, gammas, ts)

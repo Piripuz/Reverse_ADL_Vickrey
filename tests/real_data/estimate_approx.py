@@ -18,7 +18,7 @@ tt = TravelTime(approx)
 
 par = (0.1, 0.15, 9.5, 0.1, 1.0)
 
-_, _, _, t_as = generate_arrival(1000, tt, *par)
+t_as = generate_arrival(1000, tt, *par)
 
 print("Generated arrival times. Starting grid search...")
 

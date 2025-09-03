@@ -7,7 +7,7 @@ num = 1000
 tt = TravelTime(asymm_gaussian())
 par = (0.8, 0.4, 9.0, 0.4, 1.5)
 
-betas, gammas, ts, t_as = generate_arrival(num, tt, *par)
+t_as = generate_arrival(num, tt, *par)
 
 print("Generated arrivals")
 

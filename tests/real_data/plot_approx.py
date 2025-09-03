@@ -6,7 +6,7 @@ from vickrey.real_data.tt_for_day import RealData
 
 travel_data = RealData()
 
-#%%
+# %%
 
 day = 33
 travel_times = travel_data.tt_for_day(day)

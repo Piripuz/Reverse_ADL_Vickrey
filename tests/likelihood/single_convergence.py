@@ -5,7 +5,7 @@ from vickrey.utils import TravelTime
 
 num = 1000
 tt = TravelTime(asymm_gaussian())
-par = (.8, .4, 9., .4, 1.5)
+par = (0.8, 0.4, 9.0, 0.4, 1.5)
 
 betas, gammas, ts, t_as = generate_arrival(num, tt, *par)
 

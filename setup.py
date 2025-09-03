@@ -15,6 +15,6 @@ setup(
         "jax",
         "geopandas",
         "quadax",
-        "jaxopt"
-    ]
+        "jaxopt",
+    ],
 )

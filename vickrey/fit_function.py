@@ -11,12 +11,12 @@ import jax
 jax.config.update("jax_enable_x64", True)
 
 
-def gennorm_pdf(x, beta, mu, sigma):
+def gennorm(x, beta, mu, sigma):
     y = (x - mu) / sigma
     return jgennorm.pdf(y, beta) / sigma
 
 
-def skewnorm_pdf(x, a, mu, sigma):
+def skewnorm(x, a, mu, sigma):
     def pdf_unscaled(x):
         return 2 * jnorm.pdf(x) * jnorm.cdf(a * x)
 
@@ -41,7 +41,7 @@ def right_hyp(a):
 
 
 def poly_coeffs(a, b, c, p):
-    """Given the parameters a, b, c, computes the coefficients of the
+    r"""Given the parameters a, b, c, computes the coefficients of the
     polynomial that smoothly connects with the hyperbolae, and has
     value given by the parameter b at linearly spaced points between
     ps.
@@ -81,7 +81,6 @@ def func(a, b, c, p, off):
                 [
                     left_hyp(a),
                     right_hyp(c),
-                    # lambda x: (x[:, None]**jnp.arange(len(bs))*bs).sum(axis=1)
                     lambda x: jnp.polyval(jnp.flip(bs), x),
                 ],
             )
@@ -169,14 +168,19 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             mu_init = x[y.argmax()]
             sigma_init = (crit_right - crit_left) / 4
             off_init = y[0]
-            scale_init = (y.max() - off_init) / skewnorm_pdf(
+            scale_init = (y.max() - off_init) / skewnorm(
                 mu_init, a_init, mu_init, sigma_init
             )
         else:
+            if len(init) != 5:
+                raise ValueError(
+                    f"Initial conditions for function\
+                fitting are long {len(init)}, length 5 was expected."
+                )
             a_init, mu_init, sigma_init, scale_init, off_init = init
 
         def to_fit(x, a, mu, sigma, scale, off):
-            return skewnorm_pdf(x, a, mu, sigma) * scale + off
+            return skewnorm(x, a, mu, sigma) * scale + off
 
         popt, _ = curve_fit(
             to_fit,
@@ -205,14 +209,19 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             mu_init = x[y.argmax()]
             sigma_init = (crit_right - crit_left) / 4
             off_init = y[0]
-            scale_init = (y.max() - off_init) / gennorm_pdf(
+            scale_init = (y.max() - off_init) / gennorm(
                 mu_init, beta_init, mu_init, sigma_init
             )
         else:
+            if len(init) != 5:
+                raise ValueError(
+                    f"Initial conditions for function\
+                fitting are long {len(init)}, length 5 was expected."
+                )
             beta_init, mu_init, sigma_init, scale_init, off_init = init
 
         def to_fit(x, beta, mu, sigma, scale, off):
-            return gennorm_pdf(x, beta, mu, sigma) * scale + off
+            return gennorm(x, beta, mu, sigma) * scale + off
 
         popt, _ = curve_fit(
             to_fit,

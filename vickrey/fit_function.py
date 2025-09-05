@@ -24,6 +24,14 @@ def skewnorm_pdf(x, a, mu, sigma):
     return pdf_unscaled(y) / sigma
 
 
+def skewgennorm(x, a, beta, mu, sigma):
+    def pdf_unscaled(x, beta):
+        return 2 * jgennorm.pdf(x, beta) * jgennorm.cdf(a * x, beta)
+
+    y = (x - mu) / sigma
+    return pdf_unscaled(y, beta) / sigma
+
+
 def left_hyp(a):
     return lambda x: (jnp.sqrt((x - a[2]) ** 2 + a[0]) + x - a[2]) / a[1]
 
@@ -84,7 +92,13 @@ def func(a, b, c, p, off):
 
 
 def fit_to_data(x, y, kind="hyperbola", init=None):
-    supported = ["hyperbola", "skewed_gaussian", "generalized_gaussian"]
+    supported = [
+        "hyperbola",
+        "skewed_gaussian",
+        "generalized_gaussian",
+        "generalized_skewed_gaussian",
+        "skewed_generalized_gaussian",
+    ]
     if kind not in supported:
         raise ValueError(
             f'Kind "{kind}" is not supported, as it is not among {supported}'
@@ -218,3 +232,50 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             "
         )
         return lambda x: to_fit(x, beta, mu, sigma, scale, off)
+
+    elif kind in (
+        "skewed_generalized_gaussian",
+        "generalized_skewed_gaussian",
+    ):
+        if init is None:
+            crit_left = x[(y > 1.5 * y.min()).argmax()]
+            crit_right = x[len(y) - (y > 1.5 * y.min())[::-1].argmax()]
+
+            beta_init = 2
+            a_init = 0
+            mu_init = x[y.argmax()]
+            sigma_init = (crit_right - crit_left) / 4
+            off_init = y[0]
+            scale_init = (y.max() - off_init) / gennorm(
+                mu_init, beta_init, mu_init, sigma_init
+            )
+        else:
+            if len(init) != 6:
+                raise ValueError(
+                    f"Initial conditions for function\
+                fitting are long {len(init)}, length 6 was expected."
+                )
+            beta_init, a_init, mu_init, sigma_init, scale_init, off_init = init
+
+        def to_fit(x, a, beta, mu, sigma, scale, off):
+            return skewgennorm(x, a, beta, mu, sigma) * scale + off
+
+        popt, _ = curve_fit(
+            to_fit,
+            x,
+            y,
+            [a_init, beta_init, mu_init, sigma_init, scale_init, off_init],
+        )
+        a, beta, mu, sigma, scale, off = popt
+        print(
+            f"\
+            Converged to:\n\
+            a = {a}\n\
+            beta = {beta}\n\
+            mu = {mu}\n\
+            sigma = {sigma}\n\
+            scale = {scale}\n\
+            offset = {off}\n\
+            "
+        )
+        return lambda x: to_fit(x, a, beta, mu, sigma, scale, off)

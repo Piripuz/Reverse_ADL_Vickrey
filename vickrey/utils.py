@@ -4,42 +4,16 @@ import jax.numpy as jnp
 from jaxopt import GradientDescent
 
 
-def fuzzy_memoize(fun, start=0, stop=24, prec=2):
-    """Provide fuzzy memoization for a real function.
-
-    Args:
-        fun: A real function of real numbers
-        start, stop (default=0, 24): The bounds of the function domain
-        prec (default=2): The density of the grid of the lookup table
-
-    Returns:
-        memoized_fun: An approximation of the function `fun` which,
-        instead of computing the result at each function call,
-        approximates the results by using a previously computed
-        lookup table
-
-    """
-    grid = jnp.arange(start, stop, 10**-prec)
-    res = vmap(fun)(grid)
-
-    def memoized_fun(x):
-        rounded_arg = jnp.round(x, prec)
-        index = jnp.astype(rounded_arg * 100, jnp.int16) - start
-        return res[index]
-
-    return memoized_fun
-
-
 class TravelTime:
     def __init__(self, function, df=None, d2f=None):
-        self.f = fuzzy_memoize(function)
+        self.f = function
         if df is None:
-            self.df = fuzzy_memoize(grad(function))
+            self.df = grad(function)
         else:
             self.df = df
 
         if d2f is None:
-            self.d2f = fuzzy_memoize(grad(grad(function)))
+            self.d2f = grad(grad(function))
         else:
             self.d2f = d2f
 

@@ -1,93 +1,11 @@
 import numpy as np
 from scipy.optimize import curve_fit
 
-from jax import grad
-from jax import numpy as jnp
-from jax.scipy.stats import gennorm as jgennorm
-from jax.scipy.stats import norm as jnorm
 
-import jax
+from vickrey.functions import gennorm, skewnorm, skewgennorm, comp_hyp
 
-jax.config.update("jax_enable_x64", True)
-
-
-def gennorm(x, beta, mu, sigma):
-    y = (x - mu) / sigma
-    return jgennorm.pdf(y, beta) / sigma
-
-
-def skewnorm(x, a, mu, sigma):
-    def pdf_unscaled(x):
-        return 2 * jnorm.pdf(x) * jnorm.cdf(a * x)
-
-    y = (x - mu) / sigma
-    return pdf_unscaled(y) / sigma
-
-
-def skewgennorm(x, a, beta, mu, sigma):
-    def pdf_unscaled(x, beta):
-        return 2 * jgennorm.pdf(x, beta) * jgennorm.cdf(a * x, beta)
-
-    y = (x - mu) / sigma
-    return pdf_unscaled(y, beta) / sigma
-
-
-def left_hyp(a):
-    return lambda x: (jnp.sqrt((x - a[2]) ** 2 + a[0]) + x - a[2]) / a[1]
-
-
-def right_hyp(a):
-    return lambda x: (jnp.sqrt((x - a[2]) ** 2 + a[0]) - x + a[2]) / a[1]
-
-
-def poly_coeffs(a, b, c, p):
-    r"""Given the parameters a, b, c, computes the coefficients of the
-    polynomial that smoothly connects with the hyperbolae, and has
-    value given by the parameter b at linearly spaced points between
-    ps.
-    Expects $a, c \in \mathbb{R}^3, b \in \mathbb{R}^{k-3}, p \in
-    \mathbb{R}^2$
-
-    """
-
-    k = len(b) + 3
-    points = np.linspace(*p, k - 1)
-
-    mat = np.eye(k + 1)
-
-    mat[0, :] = np.r_[0, np.arange(1, k + 1) * p[0] ** np.arange(k)]
-    mat[1, :] = np.r_[0, np.arange(1, k + 1) * p[1] ** np.arange(k)]
-    mat[2:, :] = points[:, None] ** np.arange(k + 1)
-
-    coeff = np.r_[
-        grad(left_hyp(a))(p[0]),
-        grad(right_hyp(c))(p[1]),
-        left_hyp(a)(p[0]),
-        b,
-        right_hyp(c)(p[1]),
-    ]
-
-    return np.linalg.solve(mat, coeff)
-
-
-def func(a, b, c, p, off):
-    bs = poly_coeffs(a, b, c, p)
-
-    def inner_func(x):
-        return (
-            jnp.piecewise(
-                x,
-                [x < p[0], x > p[1]],
-                [
-                    left_hyp(a),
-                    right_hyp(c),
-                    lambda x: jnp.polyval(jnp.flip(bs), x),
-                ],
-            )
-            + off
-        )
-
-    return inner_func
+# import jax
+# jax.config.update("jax_enable_x64", True)
 
 
 def fit_to_data(x, y, kind="hyperbola", init=None):
@@ -106,7 +24,7 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
     if kind == "hyperbola":
 
         def to_fit(x, a1, a2, a3, b1, c1, c2, c3, p1, p2, off):
-            return func([a1, a2, a3], [b1], [c1, c2, c3], [p1, p2], off)(x)
+            return comp_hyp([a1, a2, a3], [b1], [c1, c2, c3], [p1, p2], off)(x)
 
         if init is None:
             crit_left = x[(y > 1.5 * y.min()).argmax()]
@@ -158,7 +76,7 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             offset = {off}\
             "
         )
-        return func(a, b, c, p, off)
+        return comp_hyp(a, b, c, p, off)
     elif kind == "skewed_gaussian":
         if init is None:
             crit_left = x[(y > 1.5 * y.min()).argmax()]

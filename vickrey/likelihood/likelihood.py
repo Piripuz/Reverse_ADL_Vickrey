@@ -1,4 +1,4 @@
-from jax import vmap
+from jax import vmap, jit
 from jax.nn import relu
 from jax.scipy.stats import truncnorm as jtruncnorm
 from jax.scipy.stats import norm as jnorm
@@ -131,6 +131,7 @@ def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
 
 def total_liks(travel_time, t_as):
     def mapped_lik(mu_b, mu_g, mu_t, sigma, sigma_t):
+        @jit
         def lik_restr(t_a):
             return likelihood(
                 travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t

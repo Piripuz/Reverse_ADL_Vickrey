@@ -10,24 +10,68 @@ import numpy as np
 
 
 def cost(travel_time):
+    """Return a function that computes the cost.
+
+    Args:
+        travel_time: Instance of the TravelTime class, which
+        determines the travel time function that will be used.
+
+    Returns:
+        inner_cost: Function that computes the cost given
+        the travel time function.
+    """
+
     def inner_cost(t_a, beta, gamma, t_star):
-        return (
+        """Compute the cost of arriving at a given moment.
+
+        Args:
+            t_a: Actual arrival time, in hours
+            beta: Early arrival penalty, normalized by the
+                value of time.
+            gamma: Late arrival penalty, normalized by the
+                value of time.
+            t_star: Desired arrival time, in hours.
+
+        Returns:
+            cost: Cost of the described arrival
+
+        """
+        cost = (
             travel_time.f(t_a)
             + beta * jnp.maximum(0, t_star - t_a)
             + gamma * jnp.maximum(0, t_a - t_star)
         )
+        return cost
 
     return inner_cost
 
 
 def find_td(travel_time):
-    """Given a travel time, returns a function that, given vectors of
-    betas, gammas and t*, returns a vector of the optimal departure
-    times.
+    """Return a function that computes the optimal arrival time.
+
+    Args:
+        travel_time: Instance of the TravelTime class, which
+        determines the travel time function that will be used.
+
+    Returns:
+        td_from_params: Function that finds the optimal arrival given
+        the travel time function.
 
     """
 
-    def inner_find_td(beta, gamma, t_star):
+    def td_from_params(beta, gamma, t_star):
+        """Find the optimal arrival time for a single user.
+
+        Args:
+            beta: Early arrival penalty, normalized by the
+                value of time.
+            gamma: Late arrival penalty, normalized by the
+                value of time.
+            t_star: Desired arrival time, in hours.
+
+        Returns:
+            t_a: Optimal arrival time
+        """
         cost_fun = cost(travel_time)
         solver = GradientDescent(
             fun=cost_fun, acceleration=False, maxiter=4000, stepsize=0.05
@@ -40,14 +84,15 @@ def find_td(travel_time):
             rval,
             lval,
         )
-        return jnp.where(
+        t_a = jnp.where(
             cost_fun(val, beta, gamma, t_star)
             < cost_fun(t_star, beta, gamma, t_star),
             val,
             t_star,
         )
+        return t_a
 
-    return inner_find_td
+    return td_from_params
 
 
 def generate_arrival(
@@ -72,7 +117,8 @@ def generate_arrival(
     Returns a numpy array with the data
     """
     random_gen = np.random.RandomState(seed)
-    # Betas, gammas and t_star are generated according to the chosen distributions
+    # Betas, gammas and t_star are generated according to the chosen
+    # distributions
 
     betas = truncnorm.rvs(
         -mu_beta / sigma,

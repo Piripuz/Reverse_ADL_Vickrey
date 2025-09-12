@@ -41,11 +41,7 @@ def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
 
     """
 
-    # The truncated normals pdf and cdf are definde here
-    # cdf_b = lambda b: jnorm.cdf(b, mu_b, sigma)
-    # cdf_g = lambda g: jnorm.cdf(g, mu_g, sigma)
-    # pdf_b = lambda b: jnorm.pdf(b, mu_b, sigma)
-    # pdf_g = lambda g: jnorm.pdf(g, mu_g, sigma)
+    # The truncated normals pdf and cdf are defined here
     def cdf_b(b):
         return jtruncnorm.cdf(b, -mu_b / sigma, 10000, loc=mu_b, scale=sigma)
 

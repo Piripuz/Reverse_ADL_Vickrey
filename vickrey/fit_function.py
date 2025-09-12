@@ -2,7 +2,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 
 
-from vickrey.functions import gennorm, skewnorm, skewgennorm, comp_hyp
+from vickrey.functions import gennorm, skewnorm, skewgennorm_fake, comp_hyp
 
 # import jax
 # jax.config.update("jax_enable_x64", True)
@@ -185,7 +185,7 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             beta_init, a_init, mu_init, sigma_init, scale_init, off_init = init
 
         def to_fit(x, a, beta, mu, sigma, scale, off):
-            return skewgennorm(x, a, beta, mu, sigma) * scale + off
+            return skewgennorm_fake(x, a, beta, mu, sigma) * scale + off
 
         popt, _ = curve_fit(
             to_fit,

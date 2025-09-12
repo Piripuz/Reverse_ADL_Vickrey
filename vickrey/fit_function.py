@@ -1,7 +1,8 @@
 import numpy as np
 from scipy.optimize import curve_fit
 
-
+from vickrey.utils import TravelTime
+from vickrey.real_data.tt_for_day import RealData
 from vickrey.functions import gennorm, skewnorm, skewgennorm_fake, comp_hyp
 
 # import jax
@@ -206,3 +207,27 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             "
         )
         return lambda x: to_fit(x, a, beta, mu, sigma, scale, off)
+
+
+def tt_data(day=23, road=101, dir="N", kind="generalized_skewed_gaussian"):
+    """Compute the TravelTime object for the given parameters.
+
+    Args:
+        day: The day the data are taken from
+        road: The number of the road the data are taken from
+        dir: The direction of the road the data are taken for
+        kind: The kind of function that approximates the data.
+
+    Returns:
+        travel_time: The TravelTime object relative to the requested
+            data
+    """
+    tdata = RealData().tt_for_day(day)
+    tdata.index = tdata.index / 60
+    tdata /= 60
+    times = np.r_[tdata.index]
+    approx = fit_to_data(
+        times, tdata.values, kind="generalized_skewed_gaussian"
+    )
+    travel_time = TravelTime(approx)
+    return travel_time

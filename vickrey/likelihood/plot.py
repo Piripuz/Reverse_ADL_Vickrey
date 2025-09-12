@@ -34,7 +34,6 @@ def plot_contour(
 
     x_contour = jnp.linspace(*x_bounds, 201)
     y_contour = jnp.linspace(*y_bounds, 200)
-    jnp.meshgrid(x_contour, y_contour)
     matrix_actual = vmap(vmap(log_lik, (0, None)), (None, 0))(
         x_contour, y_contour
     )

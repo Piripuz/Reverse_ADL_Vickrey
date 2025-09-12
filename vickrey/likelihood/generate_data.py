@@ -58,6 +58,7 @@ def generate_arrival(
     mu_t=9.5,
     sigma=0.1,
     sigma_t=1,
+    full_output=False,
     seed=None,
 ):
     """Generate samples of departure time.
@@ -90,4 +91,7 @@ def generate_arrival(
         random_state=random_gen,
     )
     ts = norm.rvs(mu_t, sigma_t, n, random_state=random_gen)
-    return vmap(find_td(travel_time))(betas, gammas, ts)
+    t_as = vmap(find_td(travel_time))(betas, gammas, ts)
+    if full_output:
+        return t_as, betas, gammas, ts
+    return t_as

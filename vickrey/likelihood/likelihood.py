@@ -43,16 +43,20 @@ def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
 
     # The truncated normals pdf and cdf are defined here
     def cdf_b(b):
-        return jtruncnorm.cdf(b, -mu_b / sigma, 10000, loc=mu_b, scale=sigma)
+        return jtruncnorm.cdf(
+            b, (0.01 - mu_b) / sigma, 10000, loc=mu_b, scale=sigma
+        )
 
     def cdf_g(g):
-        return jtruncnorm.cdf(g, -mu_g / sigma, 10000, loc=mu_g, scale=sigma)
+        return jtruncnorm.cdf(
+            g, (0.01 - mu_g) / sigma, 10000, loc=mu_g, scale=sigma
+        )
 
     def pdf_b(b):
-        return jtruncnorm.pdf(b, -mu_b / sigma, 10000, mu_b, sigma)
+        return jtruncnorm.pdf(b, (0.01 - mu_b) / sigma, 10000, mu_b, sigma)
 
     def pdf_g(g):
-        return jtruncnorm.pdf(g, -mu_g / sigma, 10000, mu_g, sigma)
+        return jtruncnorm.pdf(g, (0.01 - mu_g) / sigma, 10000, mu_g, sigma)
 
     # For computing the probability that a point is a kink minimum, an
     # integral is computed as in the latex.

@@ -74,7 +74,7 @@ def find_td(travel_time):
         """
         cost_fun = cost(travel_time)
         solver = GradientDescent(
-            fun=cost_fun, acceleration=False, maxiter=4000, stepsize=0.05
+            fun=cost_fun, acceleration=False, maxiter=40000, stepsize=0.05
         )
         lval, _ = solver.run(0.0, beta, gamma, t_star)
         rval, _ = solver.run(24.0, beta, gamma, t_star)
@@ -121,7 +121,7 @@ def generate_arrival(
     # distributions
 
     betas = truncnorm.rvs(
-        -mu_beta / sigma,
+        (0.01 - mu_beta) / sigma,
         10000,
         loc=mu_beta,
         scale=sigma,
@@ -129,7 +129,7 @@ def generate_arrival(
         random_state=random_gen,
     )
     gammas = truncnorm.rvs(
-        -mu_gamma / sigma,
+        (0.01 - mu_gamma) / sigma,
         10000,
         loc=mu_gamma,
         scale=sigma,

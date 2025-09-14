@@ -1,3 +1,5 @@
+"""Functions regarding the critical points to be found."""
+
 from jaxopt import GradientDescent, Bisection
 import jax.numpy as jnp
 from jax.lax import while_loop
@@ -6,12 +8,16 @@ from vickrey.utils import steps
 
 
 def find_bs(beta, travel_time):
-    """Given a travel time function and a beta value, finds the
-    interval in which the optimal arrival time is constant (and there
-    are thus no kink minima).
+    """Find the bounds of the Critical Early Interval.
 
-    Returns a couple containing initial and final points of the interval
+    Args:
+        beta: Early arrival penalty, normalized by the
+            value of time.
+        travel_time: Instance of the TravelTime class, for which the
+            CEA interval is computed.
 
+    Returns:
+        int: The extremes of the CEA interval.
     """
 
     # A gradient descent algorithm finds the initial point. The step
@@ -28,10 +34,21 @@ def find_bs(beta, travel_time):
     b_i, _ = solver.run(0.0)
     b_e = find_be(b_i, travel_time)
     # The interval extremes are returned
-    return jnp.r_[b_i, b_e]
+    int = jnp.r_[b_i, b_e]
+    return int
 
 
 def find_be(b_i, travel_time):
+    """Find the ending point of an early arrival interval starting at b_i.
+
+    Args:
+        b_i: Initial point of the early arrival interval
+        travel_time: Instance of the TravelTime class, for which the
+            interval is computed.
+
+    Returns:
+        b_e: Ending point of the early arrival interval starting at b_i.
+    """
     # The final point is found where the line starting from the initial point,
     # whith slope beta, crosses the travel time function.
     # This point is found via a bisection
@@ -45,7 +62,8 @@ def find_be(b_i, travel_time):
     step = 0.5
     high = while_loop(lambda a: fin_obj(a) > 0, lambda a: a + step, b_i + step)
     low = high - step
-    return Bisection(fin_obj, low, high, check_bracket=False).run().params
+    b_e = Bisection(fin_obj, low, high, check_bracket=False).run().params
+    return b_e
 
 
 def find_b0(t_a, travel_time):

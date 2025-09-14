@@ -1,3 +1,5 @@
+"""Functions concerning the computation of the likelihood."""
+
 from jax import vmap, jit
 from jax.nn import relu
 from jax.scipy.integrate import trapezoid
@@ -133,6 +135,17 @@ def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
 
 
 def total_liks(travel_time, t_as):
+    """Likelihood of each data point in a set of arrival times.
+
+    Args:
+        travel_time: Travel time function.
+        t_as: Dataset of arrival times.
+
+    Returns:
+        mapped_lik: Function mapping a parameter set to the array
+            of likelihoods.
+    """
+
     def mapped_lik(mu_b, mu_g, mu_t, sigma, sigma_t):
         @jit
         def lik_restr(t_a):
@@ -146,6 +159,17 @@ def total_liks(travel_time, t_as):
 
 
 def total_log_lik(travel_time, t_as):
+    """Total log likelihood of a set of arrival times.
+
+    Args:
+        travel_time: Travel time function.
+        t_as: Dataset of arrival times.
+
+    Returns:
+        mapped_lik: Function mapping a parameter set to the value
+            of the total likelihood.
+    """
+
     def mapped_lik(mu_b, mu_g, mu_t, sigma, sigma_t):
         def lik_restr(t_a):
             return likelihood(

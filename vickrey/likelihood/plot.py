@@ -31,9 +31,10 @@ def plot_contour(
         y_bounds = bounds[y_index]
 
     def log_lik(x, y):
-        par[x_index] = x
-        par[y_index] = y
-        return total_log_lik(tt, t_as)(*par)
+        new_par = par.copy()
+        new_par[x_index] = x
+        new_par[y_index] = y
+        return total_log_lik(tt, t_as)(*new_par)
 
     x_contour = jnp.linspace(*x_bounds, 81)
     y_contour = jnp.linspace(*y_bounds, 80)

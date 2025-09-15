@@ -109,14 +109,16 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
         )
         a, mu, sigma, scale, off = popt
         print(
-            f"\
-            Converged to:\n\
-            a = {a}\n\
-            mu = {mu}\n\
-            sigma = {sigma}\n\
-            scale = {scale}\n\
-            offset = {off}\n\
-            "
+            "\n".join(
+                [
+                    "Converged to:",
+                    "a = " + str(a),
+                    "mu = " + str(mu),
+                    "sigma = " + str(sigma),
+                    "scale = " + str(scale),
+                    "offset = " + str(off),
+                ]
+            )
         )
         return lambda x: to_fit(x, a, mu, sigma, scale, off)
     elif kind == "generalized_gaussian":
@@ -150,14 +152,16 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
         )
         beta, mu, sigma, scale, off = popt
         print(
-            f"\
-            Converged to:\n\
-            beta = {beta}\n\
-            mu = {mu}\n\
-            sigma = {sigma}\n\
-            scale = {scale}\n\
-            offset = {off}\n\
-            "
+            "\n".join(
+                [
+                    "Converged to:",
+                    "beta = " + str(beta),
+                    "mu = " + str(mu),
+                    "sigma = " + str(sigma),
+                    "scale = " + str(scale),
+                    "offset = " + str(off),
+                ]
+            )
         )
         return lambda x: to_fit(x, beta, mu, sigma, scale, off)
 
@@ -196,15 +200,17 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
         )
         a, beta, mu, sigma, scale, off = popt
         print(
-            f"\
-            Converged to:\n\
-            a = {a}\n\
-            beta = {beta}\n\
-            mu = {mu}\n\
-            sigma = {sigma}\n\
-            scale = {scale}\n\
-            offset = {off}\n\
-            "
+            "\n".join(
+                [
+                    "Converged to:",
+                    "a = " + str(a),
+                    "beta = " + str(beta),
+                    "mu = " + str(mu),
+                    "sigma = " + str(sigma),
+                    "scale = " + str(scale),
+                    "offset = " + str(off),
+                ]
+            )
         )
         return lambda x: to_fit(x, a, beta, mu, sigma, scale, off)
 

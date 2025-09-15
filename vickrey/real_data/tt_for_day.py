@@ -1,3 +1,4 @@
+"""Implement the class RealData, which computes travel times from PeMS data."""
 from importlib import resources
 import os
 
@@ -7,27 +8,21 @@ import numpy as np
 
 
 class RealData:
-    """Class to elaborate PeMS data, and compute a travel time curve
-    from real data.
-
-    It has a single method, tt_for_day.
-
-    """
+    """Elaborate PeMS data."""
 
     def __init__(self, route=101, way="N"):
-        """Two arguments can be supplied to the initialization
-        function:
+        """Compute the travel times for each day.
 
+        Args:
+            route: the number of the highway the data will be taken
+                from. It has to be one of 101, 85, 880, 87, 17,
+                280, 237 and 680.
 
-        route: the number of the highway the data will be taken
-        from. It has to be one of 101,  85, 880,  87,  17, 280, 237 and 680.
-
-        way: the direction in which the traffic is considered. It has
-        to be one of "N", "S" for the highways that go north to south,
-        or one of "E", "W" for the highways that go west to east.
-
+            way: the direction in which the traffic is considered.
+                It has to be one of "N", "S" for the highways that go
+                north to south, or one of "E", "W" for the highways
+                that go west to east.
         """
-
         if way not in ["N", "S", "E", "W"]:
             raise ValueError(f"{way} is not a valid road direction")
 
@@ -48,14 +43,17 @@ class RealData:
             self.travel_times = self._generate_speeds(route, way, filename)
 
     def _generate_speeds(self, route, way, filename):
-        """Given a route and a direction, computes the travel times
-        at each available time point.
+        """Compute the travel times at each available time point.
 
-        Returns a pandas series with the travel times, and saves it to
-        a file with the given filename.
+        Args:
+            route, way: Data of the road to elaborate.
+            filename: Name of the file to save
+
+        Returns:
+            travel_times: A pandas series containing the travel times,
+                which has been saved in a file with the given filename.
 
         """
-
         # Import speed data
         speeds = pd.read_hdf(
             resources.files("vickrey.data").joinpath("pems-bay.h5")
@@ -154,7 +152,8 @@ class RealData:
                 g_route_way.loc[i, "distance"] / 1000
             ) / speeds_approx.loc[cur_time, i]
 
-            # Finally, current time is updated by increasing it by the time taken
+            # Finally, current time is updated by increasing it by the
+            # time taken
             cur_time = (
                 cur_time + pd.to_timedelta(time_taken, "h").values
             ).rename("cur")
@@ -167,6 +166,15 @@ class RealData:
         return travel_times
 
     def tt_for_day(self, day):
+        """Find the travel times for a given day.
+
+        Args:
+            day: Day for which the travel times are extracted
+
+        Returns:
+            tt_of_day: series containing the travel time for the given
+                day
+        """
         tt_minutes = self.travel_times.dt.seconds / 60
         times = tt_minutes[tt_minutes.index.day_of_year == day].index
         tt_of_day = tt_minutes[times]

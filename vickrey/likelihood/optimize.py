@@ -50,9 +50,12 @@ def grad_free(t_as, tt, init, verbose=False):
         return lik_fun(par)
 
     if verbose:
-        res = minimize(obj_fun, init, method="Nelder-Mead")
+        res = minimize(obj_fun, init, method="Nelder-Mead", tol=1e-3)
     else:
-        res = minimize(lik_fun, init, method="Nelder-Mead")
+        res = minimize(lik_fun, init, method="Nelder-Mead", tol=1e-3)
+
+    return res
+
 
 def optim_cycle(t_as, tt, par=None):
     """Do a full optimization cycle: grid search and optimizer.

@@ -1,3 +1,5 @@
+"""Functions dealing with the optimization of the likelihood."""
+
 import jax.numpy as jnp
 from jax import vmap, jit
 from scipy.optimize import minimize
@@ -15,6 +17,21 @@ def grid_search(
     num_sigma=4,
     num_sigma_t=5,
 ):
+    """Perform a grid search over the likelihood parameters.
+
+    Args:
+        t_as: Vector of arrival times.
+        tt: Instance of the TravelTime class to perform the grid search on.
+        num_mu_beta, num_mu_gamma, num_mu_t, num_sigma, num_sigma_t:
+            Length of the grid, in each dimension.
+
+    Returns:
+        init: Result of the grid search.
+
+    Notes:
+        The bounds of the grid are automatically defined,
+        based on the provided travel time function.
+    """
     g_betas = jnp.linspace(0.01, tt.maxb, num_mu_beta)
     g_gammas = jnp.linspace(0.01, tt.maxg, num_mu_gamma)
     g_ts = jnp.linspace(6, 11, num_mu_t)
@@ -40,6 +57,20 @@ def grid_search(
 
 
 def grad_free(t_as, tt, init, verbose=False):
+    """Run an iterative, gradient-free optimizer over the likelihood.
+
+    Args:
+        t_as: Vector of arrival times.
+        tt: Instance of the TravelTime class the optimization is
+            performed on.
+        init: Initial conditions for the optimizer.
+        verbose (default = False): Wether each iteration should
+            print the parameter values.
+
+    Returns:
+        res: Result of the optimization algorithm.
+    """
+
     @jit
     def lik_fun(par):
         log_lik = total_log_lik(tt, t_as)(*par)

@@ -1,6 +1,7 @@
 import jax.numpy as jnp
 from jax import vmap, jit
 from scipy.optimize import minimize
+from time import time
 
 from vickrey.likelihood.likelihood import total_log_lik
 
@@ -53,4 +54,53 @@ def grad_free(t_as, tt, init, verbose=False):
     else:
         res = minimize(lik_fun, init, method="Nelder-Mead")
 
+def optim_cycle(t_as, tt, par=None):
+    """Do a full optimization cycle: grid search and optimizer.
+
+    Args:
+        t_as: Vector of arrival times, in hours.
+        tt: Instance of the TravelTime class, containing the travel
+            time function for which the optimization is done.
+        par (optional): original parameters. If given, the relative
+            errors are computed and printed.
+
+    Returns:
+        res: final result of the iterative optimizer.
+    """
+    start = time()
+    init = grid_search(t_as, tt)
+
+    print(
+        "\n".join(
+            [
+                f"In {time() - start:.2f} seconds, found initial conditions",
+                f"{init}",
+                "Starting iterative optimizer...",
+                "",
+            ]
+        )
+    )
+
+    start = time()
+    res = grad_free(t_as, tt, init)
+    if res.status:
+        breakpoint()
+
+    print(
+        "\n".join(
+            [
+                f"In {time() - start:.2f} seconds, optimizer converged to",
+                f"{res.x}",
+            ]
+        )
+    )
+    if par:
+        print(
+            "\n".join(
+                [
+                    "Relative errors:",
+                    f"{jnp.abs(jnp.r_[res.x] - jnp.r_[par]) / jnp.r_[par]}",
+                ]
+            )
+        )
     return res

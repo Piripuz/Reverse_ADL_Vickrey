@@ -70,6 +70,7 @@ def grad_free(t_as, tt, init, verbose=False):
     Returns:
         res: Result of the optimization algorithm.
     """
+
     @jit
     def lik_fun(par):
         log_lik = total_log_lik(tt, t_as)(*par)
@@ -124,6 +125,7 @@ def optim_cycle(t_as, tt, par=None):
             [
                 f"In {time() - start:.2f} seconds, optimizer converged to",
                 f"{res.x}",
+                "",
             ]
         )
     )
@@ -133,6 +135,7 @@ def optim_cycle(t_as, tt, par=None):
                 [
                     "Relative errors:",
                     f"{jnp.abs(jnp.r_[res.x] - jnp.r_[par]) / jnp.r_[par]}",
+                    "",
                 ]
             )
         )

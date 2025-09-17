@@ -117,6 +117,7 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
                     "sigma = " + str(sigma),
                     "scale = " + str(scale),
                     "offset = " + str(off),
+                    "",
                 ]
             )
         )
@@ -160,6 +161,7 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
                     "sigma = " + str(sigma),
                     "scale = " + str(scale),
                     "offset = " + str(off),
+                    "",
                 ]
             )
         )
@@ -209,6 +211,7 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
                     "sigma = " + str(sigma),
                     "scale = " + str(scale),
                     "offset = " + str(off),
+                    "",
                 ]
             )
         )

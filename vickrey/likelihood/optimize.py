@@ -65,12 +65,11 @@ def grad_free(t_as, tt, init, verbose=False):
             performed on.
         init: Initial conditions for the optimizer.
         verbose (default = False): Wether each iteration should
-            print the parameter values.
+            print the current parameter values.
 
     Returns:
         res: Result of the optimization algorithm.
     """
-
     @jit
     def lik_fun(par):
         log_lik = total_log_lik(tt, t_as)(*par)

@@ -105,7 +105,10 @@ def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
 
     int_early = trapezoid(vmap(inner_int_early)(x_gamma), x_gamma, axis=0)
     lik_early = (
-        int_early * pdf_b(travel_time.df(t_a)) * relu(travel_time.d2f(t_a))
+        int_early
+        * pdf_b(travel_time.df(t_a))
+        * relu(travel_time.d2f(t_a))
+        * cdf_b(travel_time.maxb)
     )
 
     def inner_int_late_cdf(x):
@@ -126,7 +129,10 @@ def likelihood(travel_time, t_a, mu_b, mu_g, mu_t, sigma, sigma_t):
     int_late = trapezoid(vmap(inner_int_late)(x_beta), x_beta, axis=0)
 
     lik_late = (
-        int_late * pdf_g(-travel_time.df(t_a)) * relu(travel_time.d2f(t_a))
+        int_late
+        * pdf_g(-travel_time.df(t_a))
+        * relu(travel_time.d2f(t_a))
+        * cdf_g(travel_time.maxg)
     )
 
     likelihood_internal = lik_early + lik_late

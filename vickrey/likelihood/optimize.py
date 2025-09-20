@@ -35,7 +35,7 @@ def grid_search(
     g_betas = jnp.linspace(0.01, tt.maxb, num_mu_beta)
     g_gammas = jnp.linspace(0.01, tt.maxg, num_mu_gamma)
     g_ts = jnp.linspace(6, 11, num_mu_t)
-    g_sigmas = jnp.linspace(0.1, 0.5, num_sigma)
+    g_sigmas = jnp.linspace(0.01, 0.2, num_sigma)
     g_sigmats = jnp.linspace(0.2, 1.5, num_sigma_t)
 
     mesh_par = jnp.meshgrid(g_betas, g_gammas, g_ts, g_sigmas, g_sigmats)

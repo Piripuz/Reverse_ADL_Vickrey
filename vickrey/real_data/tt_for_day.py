@@ -2,6 +2,7 @@
 
 from importlib import resources
 import os
+import warnings
 
 import pandas as pd
 import geopandas as gpd
@@ -178,6 +179,12 @@ class RealData:
         """
         tt_minutes = self.travel_times.dt.seconds / 60
         times = tt_minutes[tt_minutes.index.day_of_year == day].index
+        if times[0].dayofweek >= 5:
+            warnings.warn(
+                "Warning: in year 2017, "
+                f"day {day} is a {times[0].day_name()}. "
+                "You may not want to compute travel times for a weekend day"
+            )
         tt_of_day = tt_minutes[times]
         tt_of_day.index = (tt_of_day.index - tt_of_day.index[0]).seconds / 60
         tt_of_day.name = "{}, {} {} ({})".format(

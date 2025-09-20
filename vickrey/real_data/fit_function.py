@@ -10,6 +10,16 @@ from vickrey.functions import gennorm, skewnorm, skewgennorm_fake, comp_hyp
 
 
 def fit_to_data(x, y, kind="hyperbola", init=None):
+    if init is None:
+        # Regardless of the type of function, the bounds of the travel
+        # time peak are looked for:
+        if y.max() > 1.5 * y.min():
+            crit_left = x[(y > 1.5 * y.min()).argmax()]
+            crit_right = x[len(y) - (y > 1.5 * y.min())[::-1].argmax()]
+        else:
+            crit_left = x[0]
+            crit_right = x[-1]
+
     supported = [
         "hyperbola",
         "skewed_gaussian",
@@ -21,15 +31,12 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
         raise ValueError(
             f'Kind "{kind}" is not supported, as it is not among {supported}'
         )
-
     if kind == "hyperbola":
 
         def to_fit(x, a1, a2, a3, b1, c1, c2, c3, p1, p2, off):
             return comp_hyp([a1, a2, a3], [b1], [c1, c2, c3], [p1, p2], off)(x)
 
         if init is None:
-            crit_left = x[(y > 1.5 * y.min()).argmax()]
-            crit_right = x[len(y) - (y > 1.5 * y.min())[::-1].argmax()]
             b = y.max()
 
             p_init = list(np.linspace(crit_left, crit_right, 4)[1:3])
@@ -80,9 +87,6 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
         return comp_hyp(a, b, c, p, off)
     elif kind == "skewed_gaussian":
         if init is None:
-            crit_left = x[(y > 1.5 * y.min()).argmax()]
-            crit_right = x[len(y) - (y > 1.5 * y.min())[::-1].argmax()]
-
             a_init = 0
             mu_init = x[y.argmax()]
             sigma_init = (crit_right - crit_left) / 4
@@ -124,9 +128,6 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
         return lambda x: to_fit(x, a, mu, sigma, scale, off)
     elif kind == "generalized_gaussian":
         if init is None:
-            crit_left = x[(y > 1.5 * y.min()).argmax()]
-            crit_right = x[len(y) - (y > 1.5 * y.min())[::-1].argmax()]
-
             beta_init = 2
             mu_init = x[y.argmax()]
             sigma_init = (crit_right - crit_left) / 4
@@ -172,9 +173,6 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
         "generalized_skewed_gaussian",
     ):
         if init is None:
-            crit_left = x[(y > 1.5 * y.min()).argmax()]
-            crit_right = x[len(y) - (y > 1.5 * y.min())[::-1].argmax()]
-
             beta_init = 2
             a_init = 0
             mu_init = x[y.argmax()]

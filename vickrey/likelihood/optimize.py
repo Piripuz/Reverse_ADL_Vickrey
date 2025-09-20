@@ -11,11 +11,11 @@ from vickrey.likelihood.likelihood import total_log_lik
 def grid_search(
     t_as,
     tt,
-    num_mu_beta=6,
-    num_mu_gamma=6,
+    num_mu_beta=4,
+    num_mu_gamma=4,
     num_mu_t=3,
     num_sigma=4,
-    num_sigma_t=5,
+    num_sigma_t=4,
 ):
     """Perform a grid search over the likelihood parameters.
 

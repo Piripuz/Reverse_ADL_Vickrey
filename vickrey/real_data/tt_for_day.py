@@ -38,7 +38,7 @@ class RealData:
             tts = pd.read_csv(filename, index_col=0, parse_dates=True)
             if tts.shape[1] != 1:
                 raise ValueError(
-                    "Found wrong csv file. Please regenerate cash"
+                    "Found wrong csv file. Please regenerate cache"
                 )
             self.travel_times = pd.to_timedelta(tts.iloc[:, 0])
         else:

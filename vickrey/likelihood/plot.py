@@ -70,3 +70,42 @@ def plot_contour(
     ax.set_xlabel("$" + names[x_index] + "$")
     ax.set_ylabel("$" + names[y_index] + "$")
     return contour
+
+
+def plot_hist(tt, t_as, par, ax=None, par2=None):
+    """Plot an histogram of arrival times, with the likelihood of them.
+
+    Args:
+        tt: Instance of the TravelTime class, containing the travel
+            time function to plot the likelihood for.
+        t_as: Vector of arrival time to plot in the histogram.
+        par: Parameters from which the likelihood function will be
+            plotted.
+        ax: matplotlib.pyplot.Axes instance, on which the histogram will
+            be plotted. If no axis is given, the current axis will be
+            used.
+        par2: Second set of parameters, to compare the likelihoods
+            coming from two different parameter values.
+    """
+    if ax is None:
+        ax = plt.gca()
+    hist = ax.hist(t_as, 80, label="Arrival times")
+
+    x = np.linspace(t_as.min(), t_as.max(), 200)
+    liks = total_liks(tt, x)(*par)
+
+    mult = hist[0].max() / liks.max()
+    ax.fill_between(
+        x, liks * mult, color="green", alpha=0.3, label="True likelihood value"
+    )
+    if par2 is not None:
+        liks_wrong = total_liks(tt, x)(*par2)
+        ax.fill_between(
+            x,
+            liks_wrong * mult,
+            color="red",
+            alpha=0.3,
+            label="Wrong likelihood value",
+        )
+
+    ax.legend()

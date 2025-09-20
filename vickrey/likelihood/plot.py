@@ -96,7 +96,12 @@ def plot_hist(tt, t_as, par, ax=None, par2=None):
 
     mult = hist[0].max() / liks.max()
     ax.fill_between(
-        x, liks * mult, color="green", alpha=0.3, label="True likelihood value"
+        x,
+        liks * mult,
+        color="green",
+        alpha=0.3,
+        label="True likelihood value",
+        edgecolor=None,
     )
     if par2 is not None:
         liks_wrong = total_liks(tt, x)(*par2)
@@ -106,6 +111,7 @@ def plot_hist(tt, t_as, par, ax=None, par2=None):
             color="red",
             alpha=0.3,
             label="Wrong likelihood value",
+            edgecolor=None,
         )
 
     ax.legend()

@@ -129,18 +129,19 @@ def optim_cycle(t_as, tt, par=None):
             [
                 f"In {time() - start:.2f} seconds, optimizer converged to",
                 f"{res.x}",
-                "",
             ]
         )
     )
-    if par:
+    if par is not None:
         print(
             "\n".join(
                 [
+                    "Original parameter values:",
+                    f"{par}",
                     "Relative errors:",
                     f"{jnp.abs(jnp.r_[res.x] - jnp.r_[par]) / jnp.r_[par]}",
-                    "",
                 ]
             )
         )
+    print("\n")
     return res

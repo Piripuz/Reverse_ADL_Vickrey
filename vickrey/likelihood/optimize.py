@@ -1,8 +1,9 @@
 """Functions dealing with the optimization of the likelihood."""
 
+import numpy as np
 import jax.numpy as jnp
 from jax import vmap, jit
-from scipy.optimize import minimize
+from scipy.optimize import Bounds, minimize
 from time import time
 
 from vickrey.likelihood.likelihood import total_log_lik
@@ -76,14 +77,17 @@ def grad_free(t_as, tt, init, verbose=False):
         log_lik = total_log_lik(tt, t_as)(*par)
         return -log_lik
 
-    def obj_fun(par):
-        print(("{:8.4f}" * 5).format(*par))
-        return lik_fun(par)
-
     if verbose:
-        res = minimize(obj_fun, init, method="Nelder-Mead", tol=1e-3)
+
+        def obj_fun(par):
+            print(("{:8.4f}" * 5).format(*par))
+            return lik_fun(par)
     else:
-        res = minimize(lik_fun, init, method="Nelder-Mead", tol=1e-3)
+        obj_fun = lik_fun
+    bounds = Bounds(
+        lb=[0, 0, 0, 0, 0], ub=[np.inf, np.inf, 24, np.inf, np.inf]
+    )
+    res = minimize(obj_fun, init, method="Nelder-Mead", bounds=bounds)
 
     return res
 

@@ -58,8 +58,8 @@ def plot_contour(
         new_par[y_index] = y
         return total_log_lik(tt, t_as)(*new_par)
 
-    x_contour = jnp.linspace(*x_bounds, 81)
-    y_contour = jnp.linspace(*y_bounds, 80)
+    x_contour = jnp.linspace(*x_bounds, 51)
+    y_contour = jnp.linspace(*y_bounds, 50)
     matrix_actual = vmap(vmap(log_lik, (0, None)), (None, 0))(
         x_contour, y_contour
     )

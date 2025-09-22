@@ -3,6 +3,8 @@ import jax.numpy as jnp
 
 from jaxopt import GradientDescent
 
+from datetime import datetime
+
 
 class TravelTime:
     def __init__(self, function, df=None, d2f=None):
@@ -37,3 +39,9 @@ def steps(high=0.1, nhigh=200, small=0.01, nsmall=450, vsmall=1e-3):
         )
 
     return inner_step
+
+
+def is_weekend(day):
+    """Compute wether a day of 2017 is a weekend day."""
+    date = datetime.strptime(f"{day:03}" + "2017", "%j%Y")
+    return date.weekday() > 4

@@ -20,6 +20,9 @@ def grid_search(
 ):
     """Perform a grid search over the likelihood parameters.
 
+    The bounds of the grid are automatically defined,
+    based on the provided travel time function.
+
     Args:
         t_as: Vector of arrival times.
         tt: Instance of the TravelTime class to perform the grid search on.
@@ -29,9 +32,6 @@ def grid_search(
     Returns:
         init: Result of the grid search.
 
-    Notes:
-        The bounds of the grid are automatically defined,
-        based on the provided travel time function.
     """
     g_betas = jnp.linspace(0.01, tt.maxb, num_mu_beta)
     g_gammas = jnp.linspace(0.01, tt.maxg, num_mu_gamma)

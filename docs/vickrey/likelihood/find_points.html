@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>vickrey.likelihood.find_points API documentation</title>
+<meta name="description" content="Functions regarding the critical points to be found.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>vickrey.likelihood.find_points</code></h1>
+</header>
+<section id="section-intro">
+<p>Functions regarding the critical points to be found.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="vickrey.likelihood.find_points.find_b0"><code class="name flex">
+<span>def <span class="ident">find_b0</span></span>(<span>t_a, travel_time)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_b0(t_a, travel_time):
+    r&#34;&#34;&#34;Find the value of the parameter b0.
+
+    The value of the parameter is the maximal value of $\beta$ such that the
+    arrival time is a kink equilibrium for every value higher than it.
+
+    Args:
+        t_a: Desired arrival time for which the parameter is computed.
+        travel_time: Instance of the TravelTime class, representing
+            the travel time function for which the calculation is made.
+
+    Returns:
+        sol: Value of the parameter.
+    &#34;&#34;&#34;
+    # A really low and a really high value are defined as starting
+    # points for the bisection
+    min = 1e-2
+    max = travel_time.maxb
+
+    # The objective function, an indicator function that shows wether
+    # the parameter t_a is in the interval for a given beta, is
+    # defined
+    def isin(x, int):
+        return jnp.where(jnp.logical_and((x &gt; int[0]), (x &lt; int[1])), 1, -1)
+
+    def isin_obj(b):
+        return isin(t_a, find_bs(b, travel_time))
+
+    # If t_a is not in the interval for the starting points,
+    # the starting points are returned themselves.
+    # Otherwise, the bisection algorithm is run.
+    is_max = isin_obj(min) == -1
+    is_min = isin_obj(max) == 1
+    sol = jnp.where(
+        jnp.logical_and(jnp.logical_not(is_max), jnp.logical_not(is_min)),
+        Bisection(isin_obj, min, max, check_bracket=False).run().params,
+        jnp.where(is_max, min, max),
+    )
+    return sol</code></pre>
+</details>
+<div class="desc"><p>Find the value of the parameter b0.</p>
+<p>The value of the parameter is the maximal value of $\beta$ such that the
+arrival time is a kink equilibrium for every value higher than it.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>t_a</code></strong></dt>
+<dd>Desired arrival time for which the parameter is computed.</dd>
+<dt><strong><code>travel_time</code></strong></dt>
+<dd>Instance of the TravelTime class, representing
+the travel time function for which the calculation is made.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>sol</code></dt>
+<dd>Value of the parameter.</dd>
+</dl></div>
+</dd>
+<dt id="vickrey.likelihood.find_points.find_be"><code class="name flex">
+<span>def <span class="ident">find_be</span></span>(<span>b_i, travel_time)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_be(b_i, travel_time):
+    &#34;&#34;&#34;Find the ending point of an early arrival interval starting at b_i.
+
+    Args:
+        b_i: Initial point of the early arrival interval
+        travel_time: Instance of the TravelTime class, for which the
+            interval is computed.
+
+    Returns:
+        b_e: Ending point of the early arrival interval starting at b_i.
+    &#34;&#34;&#34;
+    # The final point is found where the line starting from the initial point,
+    # whith slope beta, crosses the travel time function.
+    # This point is found via a bisection
+
+    beta = travel_time.df(b_i)
+
+    def fin_obj(x):
+        return travel_time.f(x) - beta * (x - b_i) - travel_time.f(b_i)
+
+    # Two points where to start the bisection are computed
+    step = 0.5
+    high = while_loop(lambda a: fin_obj(a) &gt; 0, lambda a: a + step, b_i + step)
+    low = high - step
+    b_e = Bisection(fin_obj, low, high, check_bracket=False).run().params
+    return b_e</code></pre>
+</details>
+<div class="desc"><p>Find the ending point of an early arrival interval starting at b_i.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>b_i</code></strong></dt>
+<dd>Initial point of the early arrival interval</dd>
+<dt><strong><code>travel_time</code></strong></dt>
+<dd>Instance of the TravelTime class, for which the
+interval is computed.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>b_e</code></dt>
+<dd>Ending point of the early arrival interval starting at b_i.</dd>
+</dl></div>
+</dd>
+<dt id="vickrey.likelihood.find_points.find_bs"><code class="name flex">
+<span>def <span class="ident">find_bs</span></span>(<span>beta, travel_time)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_bs(beta, travel_time):
+    &#34;&#34;&#34;Find the bounds of the Critical Early Interval.
+
+    Args:
+        beta: Early arrival penalty, normalized by the
+            value of time.
+        travel_time: Instance of the TravelTime class, for which the
+            CEA interval is computed.
+
+    Returns:
+        int: The extremes of the CEA interval.
+    &#34;&#34;&#34;
+
+    # A gradient descent algorithm finds the initial point. The step
+    # size is chosen to be inversely proportional to the value of beta
+    # because the function will become shallower the lower the beta
+    # is.
+    def stepsize(n):
+        return steps()(n) / beta
+
+    def in_obj(x):
+        return travel_time.f(x) - beta * x
+
+    solver = GradientDescent(fun=in_obj, acceleration=False, stepsize=stepsize)
+    b_i, _ = solver.run(0.0)
+    b_e = find_be(b_i, travel_time)
+    # The interval extremes are returned
+    int = jnp.r_[b_i, b_e]
+    return int</code></pre>
+</details>
+<div class="desc"><p>Find the bounds of the Critical Early Interval.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>beta</code></strong></dt>
+<dd>Early arrival penalty, normalized by the
+value of time.</dd>
+<dt><strong><code>travel_time</code></strong></dt>
+<dd>Instance of the TravelTime class, for which the
+CEA interval is computed.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The extremes of the CEA interval.</dd>
+</dl></div>
+</dd>
+<dt id="vickrey.likelihood.find_points.find_g0"><code class="name flex">
+<span>def <span class="ident">find_g0</span></span>(<span>t_a, travel_time)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_g0(t_a, travel_time):
+    r&#34;&#34;&#34;Find the value of the parameter g0.
+
+    The value of the parameter is the maximal value of $\gamma$ such that the
+    arrival time is a kink equilibrium for every value higher than it.
+
+    Args:
+        t_a: Desired arrival time for which the parameter is computed.
+        travel_time: Instance of the TravelTime class, representing
+            the travel time function for which the calculation is made.
+
+    Returns:
+        sol: Value of the parameter.
+    &#34;&#34;&#34;
+    # A really low and a really high value are defined as starting
+    # points for the bisection
+    min = 1e-2
+    max = travel_time.maxg
+
+    # The objective function, an indicator function that shows wether
+    # the parameter t_a is in the interval for a given gamma, is
+    # defined
+    def isin(x, int):
+        return jnp.where(jnp.logical_and((x &gt; int[0]), (x &lt; int[1])), 1, -1)
+
+    def isin_obj(g):
+        return isin(t_a, find_gs(g, travel_time))
+
+    # If t_a is not in the interval for the starting points,
+    # the starting points are returned themselves.
+    # Otherwise, the bisection algorithm is run.
+    is_max = isin_obj(min) == -1
+    is_min = isin_obj(max) == 1
+    sol = jnp.where(
+        jnp.logical_and(jnp.logical_not(is_max), jnp.logical_not(is_min)),
+        Bisection(isin_obj, min, max, check_bracket=False).run().params,
+        jnp.where(is_max, min, max),
+    )
+    return sol</code></pre>
+</details>
+<div class="desc"><p>Find the value of the parameter g0.</p>
+<p>The value of the parameter is the maximal value of $\gamma$ such that the
+arrival time is a kink equilibrium for every value higher than it.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>t_a</code></strong></dt>
+<dd>Desired arrival time for which the parameter is computed.</dd>
+<dt><strong><code>travel_time</code></strong></dt>
+<dd>Instance of the TravelTime class, representing
+the travel time function for which the calculation is made.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>sol</code></dt>
+<dd>Value of the parameter.</dd>
+</dl></div>
+</dd>
+<dt id="vickrey.likelihood.find_points.find_gi"><code class="name flex">
+<span>def <span class="ident">find_gi</span></span>(<span>g_e, travel_time)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_gi(g_e, travel_time):
+    &#34;&#34;&#34;Find the initial point of an CEA interval ending at g_e.
+
+    Args:
+        g_e: Initial point of the early arrival interval.
+        travel_time: Instance of the TravelTime class, for which the
+            interval is computed.
+
+    Returns:
+        b_e: Ending point of the early arrival interval starting at b_i.
+    &#34;&#34;&#34;
+    # The initial point is found where the line starting from the
+    # final point, whith slope -gamma, crosses the travel time
+    # function.
+    # This point is found via a bisection
+
+    gamma = -travel_time.df(g_e)
+
+    def fin_obj(x):
+        return travel_time.f(x) + gamma * (x - g_e) - travel_time.f(g_e)
+
+    # Two points where to start the bisection are computed
+    step = 0.5
+    low = while_loop(lambda a: fin_obj(a) &gt; 0, lambda a: a - step, g_e - step)
+    high = low + step
+    return Bisection(fin_obj, low, high, check_bracket=False).run().params</code></pre>
+</details>
+<div class="desc"><p>Find the initial point of an CEA interval ending at g_e.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>g_e</code></strong></dt>
+<dd>Initial point of the early arrival interval.</dd>
+<dt><strong><code>travel_time</code></strong></dt>
+<dd>Instance of the TravelTime class, for which the
+interval is computed.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>b_e</code></dt>
+<dd>Ending point of the early arrival interval starting at b_i.</dd>
+</dl></div>
+</dd>
+<dt id="vickrey.likelihood.find_points.find_gs"><code class="name flex">
+<span>def <span class="ident">find_gs</span></span>(<span>gamma, travel_time)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_gs(gamma, travel_time):
+    r&#34;&#34;&#34;Find the bounds of the Critical Late Arrival interval.
+
+    Args:
+        gamma: Value of the late arrival penalty, for which the interval
+            is computed. It is required for gamma to be lower than
+            the value of $\gamma_{max}$.
+        travel_time: Instance of the TravelTime class, representing
+            the travel time function for which the calculation is made.
+
+    Returns:
+        g_i, g_e: Bounds of the CLA interval.
+    &#34;&#34;&#34;
+
+    # A gradient descent algorithm finds the final point
+    def stepsize(n):
+        return steps()(n) / gamma
+
+    def fin_obj(x):
+        return travel_time.f(x) + gamma * x
+
+    solver = GradientDescent(
+        fun=fin_obj, acceleration=False, stepsize=stepsize
+    )
+    g_e, state = solver.run(24.0)
+    g_i = find_gi(g_e, travel_time)
+    # The interval extremes are returned
+    return jnp.r_[g_i, g_e]</code></pre>
+</details>
+<div class="desc"><p>Find the bounds of the Critical Late Arrival interval.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>gamma</code></strong></dt>
+<dd>Value of the late arrival penalty, for which the interval
+is computed. It is required for gamma to be lower than
+the value of $\gamma_{max}$.</dd>
+<dt><strong><code>travel_time</code></strong></dt>
+<dd>Instance of the TravelTime class, representing
+the travel time function for which the calculation is made.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>g_i, g_e</code></dt>
+<dd>Bounds of the CLA interval.</dd>
+</dl></div>
+</dd>
+<dt id="vickrey.likelihood.find_points.find_ts"><code class="name flex">
+<span>def <span class="ident">find_ts</span></span>(<span>beta, gamma, travel_time)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_ts(beta, gamma, travel_time):
+    r&#34;&#34;&#34;Find the value of the point $\bar{t^*}$.&#34;&#34;&#34;
+    gamma += 1e-15
+    beta += 1e-15
+    # Here, calls to find_bs and find_gs with invalid values have to
+    # be avoided: if gamma is too big, ts should return infinite (or
+    # 24)
+    gamma_adapted = jnp.minimum(gamma, travel_time.maxg - 1e-2)
+    beta_adapted = jnp.minimum(beta, travel_time.maxb - 1e-2)
+    b_i, b_e = find_bs(beta_adapted, travel_time)
+    g_i, g_e = find_gs(gamma_adapted, travel_time)
+    num = beta * b_i - travel_time.f(b_i) + gamma * g_e + travel_time.f(g_e)
+    res = num / (beta + gamma)
+    return jnp.where(
+        gamma &lt; travel_time.maxg,
+        jnp.where(beta &lt; travel_time.maxb, res, 0),
+        24,
+    )</code></pre>
+</details>
+<div class="desc"><p>Find the value of the point $\bar{t^*}$.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="vickrey.likelihood" href="index.html">vickrey.likelihood</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="vickrey.likelihood.find_points.find_b0" href="#vickrey.likelihood.find_points.find_b0">find_b0</a></code></li>
+<li><code><a title="vickrey.likelihood.find_points.find_be" href="#vickrey.likelihood.find_points.find_be">find_be</a></code></li>
+<li><code><a title="vickrey.likelihood.find_points.find_bs" href="#vickrey.likelihood.find_points.find_bs">find_bs</a></code></li>
+<li><code><a title="vickrey.likelihood.find_points.find_g0" href="#vickrey.likelihood.find_points.find_g0">find_g0</a></code></li>
+<li><code><a title="vickrey.likelihood.find_points.find_gi" href="#vickrey.likelihood.find_points.find_gi">find_gi</a></code></li>
+<li><code><a title="vickrey.likelihood.find_points.find_gs" href="#vickrey.likelihood.find_points.find_gs">find_gs</a></code></li>
+<li><code><a title="vickrey.likelihood.find_points.find_ts" href="#vickrey.likelihood.find_points.find_ts">find_ts</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

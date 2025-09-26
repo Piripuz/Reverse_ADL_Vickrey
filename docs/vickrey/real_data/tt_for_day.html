@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>vickrey.real_data.tt_for_day API documentation</title>
+<meta name="description" content="Implement the class RealData, which computes travel times from PeMS data.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>vickrey.real_data.tt_for_day</code></h1>
+</header>
+<section id="section-intro">
+<p>Implement the class RealData, which computes travel times from PeMS data.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="vickrey.real_data.tt_for_day.RealData"><code class="flex name class">
+<span>class <span class="ident">RealData</span></span>
+<span>(</span><span>route=101, way='N')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RealData:
+    &#34;&#34;&#34;Elaborate PeMS data.&#34;&#34;&#34;
+
+    def __init__(self, route=101, way=&#34;N&#34;):
+        &#34;&#34;&#34;Compute the travel times for each day.
+
+        Args:
+            route: the number of the highway the data will be taken
+                from. It has to be one of 101, 85, 880, 87, 17,
+                280, 237 and 680.
+
+            way: the direction in which the traffic is considered.
+                It has to be one of &#34;N&#34;, &#34;S&#34; for the highways that go
+                north to south, or one of &#34;E&#34;, &#34;W&#34; for the highways
+                that go west to east.
+        &#34;&#34;&#34;
+        if way not in [&#34;N&#34;, &#34;S&#34;, &#34;E&#34;, &#34;W&#34;]:
+            raise ValueError(f&#34;{way} is not a valid road direction&#34;)
+
+        filename = resources.files(&#34;vickrey.data&#34;).joinpath(
+            &#34;cache_travel_times&#34;, f&#34;speeds_{route}_{way}.csv&#34;
+        )
+
+        # Check if the speeds for the route/way have already been
+        # generated
+        if os.path.isfile(filename):
+            tts = pd.read_csv(filename, index_col=0, parse_dates=True)
+            if tts.shape[1] != 1:
+                raise ValueError(
+                    &#34;Found wrong csv file. Please regenerate cache&#34;
+                )
+            self.travel_times = pd.to_timedelta(tts.iloc[:, 0])
+        else:
+            self.travel_times = self._generate_speeds(route, way, filename)
+
+    def _generate_speeds(self, route, way, filename):
+        &#34;&#34;&#34;Compute the travel times at each available time point.
+
+        Args:
+            route, way: Data of the road to elaborate.
+            filename: Name of the file to save
+
+        Returns:
+            travel_times: A pandas series containing the travel times,
+                which has been saved in a file with the given filename.
+
+        &#34;&#34;&#34;
+        # Import speed data
+        speeds = pd.read_hdf(
+            resources.files(&#34;vickrey.data&#34;).joinpath(&#34;pems-bay.h5&#34;)
+        )
+        # Convert mph to kph
+        speeds *= 1.609344
+
+        # Following code (commented) shows that 0s are wrong
+        # measurements. They can thus be deleted.
+
+        # speedz = speeds.loc[:, (speeds == 0).max()]
+        # days = speedz[(speedz == 0).max(axis=1)].index.day_of_year
+        # day0 = speedz.loc[:, (speedz[speedz.index.day_of_year == days[2]] == 0).max()].columns
+        # plt.plot(speedz.loc[speedz.index.day_of_year == days[2], day0[5:10]])
+        # plt.show()
+
+        speeds = speeds.replace(0, np.nan).ffill()
+        speeds = speeds.reindex(
+            pd.date_range(speeds.index[0], speeds.index[-1], freq=&#34;5min&#34;),
+            method=&#34;ffill&#34;,
+        )
+
+        # Import station metadata
+        st_data = pd.read_csv(
+            resources.files(&#34;vickrey.data&#34;).joinpath(
+                &#34;stations_meta/d04_text_meta_2018_01_26.txt&#34;
+            ),
+            sep=&#34;\t&#34;,
+        ).set_index(&#34;ID&#34;)
+        f_st_data = st_data.loc[
+            speeds.columns
+        ]  # Filtering the sensors for which data are available
+        if route not in f_st_data.Fwy.unique():
+            raise ValueError(f&#34;{route} is not a valid highway name&#34;)
+
+        g_data = gpd.GeoDataFrame(
+            f_st_data,
+            geometry=gpd.points_from_xy(
+                f_st_data.Longitude, f_st_data.Latitude
+            ),
+            crs=&#34;EPSG:4326&#34;,
+        )
+
+        speeds_route = speeds[
+            g_data[g_data.Fwy == route].sort_values(&#34;Longitude&#34;).index
+        ]
+
+        speeds_route_way = speeds_route.loc[
+            :, g_data.loc[speeds_route.columns].Dir == way
+        ]
+
+        if speeds_route_way.empty:
+            raise ValueError(f&#34;Highway {route} does not go in direction {way}&#34;)
+
+        # Since sensors are pretty close, it is fine to use euclidean
+        # distance. If computing the actual travel distance was required, the
+        # package OSMnx could do that.
+
+        g_route_way = gpd.GeoDataFrame(
+            g_data.loc[speeds_route_way.columns].geometry
+        )
+
+        # For going north or west, the order has to be inverted
+        if way in &#34;NW&#34;:
+            g_route_way = g_route_way.iloc[::-1]
+        g_route_way.to_crs(epsg=3310, inplace=True)
+        g_route_way[&#34;pos_n&#34;] = g_route_way.geometry.shift(-1)
+        g_route_way[&#34;distance&#34;] = g_route_way.geometry.distance(
+            g_route_way.pos_n
+        ).fillna(0)
+
+        # cur_time is initialized to the initial time of each travel time
+        # point, and will then be increased iteratively
+        cur_time = speeds_route_way.index.to_series(name=&#34;cur&#34;)
+        for i in g_route_way.index:
+            # For finding the most likely travel time available, speeds for
+            # the nearest datapoint (in time) are found by doing a &#34;nearest&#34;
+            # merge (merge_asof). To do this, it is necessary to sort the
+            # values with respect to the key (namely, the current time and not
+            # the departure time)
+            cur_time.sort_values(inplace=True)
+            speeds_approx = pd.merge_asof(
+                cur_time,
+                speeds_route_way,
+                left_on=&#34;cur&#34;,
+                right_index=True,
+                direction=&#34;nearest&#34;,
+            ).set_index(&#34;cur&#34;)
+
+            # The index will be the starting point for the computed speeds
+            speeds_approx.index.name = &#34;start&#34;
+
+            # Time taken to go trough a segment is computed by dividing its
+            # length (in km) by the speed found by the loop sensor
+            time_taken = (
+                g_route_way.loc[i, &#34;distance&#34;] / 1000
+            ) / speeds_approx.loc[cur_time, i]
+
+            # Finally, current time is updated by increasing it by the
+            # time taken
+            cur_time = (
+                cur_time + pd.to_timedelta(time_taken, &#34;h&#34;).values
+            ).rename(&#34;cur&#34;)
+
+        # The final series is now sorted by its index
+        arr_time = cur_time.sort_index()
+        travel_times = arr_time - arr_time.index
+
+        travel_times.to_csv(filename)
+        return travel_times
+
+    def tt_for_day(self, day):
+        &#34;&#34;&#34;Find the travel times for a given day.
+
+        Args:
+            day: Day for which the travel times are extracted
+
+        Returns:
+            tt_of_day: series containing the travel time for the given
+                day
+        &#34;&#34;&#34;
+        tt_minutes = self.travel_times.dt.seconds / 60
+        times = tt_minutes[tt_minutes.index.day_of_year == day].index
+        if times[0].dayofweek &gt;= 5:
+            warnings.warn(
+                &#34;Warning: in year 2017, &#34;
+                f&#34;day {day} is a {times[0].day_name()}. &#34;
+                &#34;You may not want to compute travel times for a weekend day&#34;
+            )
+        tt_of_day = tt_minutes[times]
+        tt_of_day.index = (tt_of_day.index - tt_of_day.index[0]).seconds / 60
+        tt_of_day.name = &#34;{}, {} {} ({})&#34;.format(
+            times[0].day_name(), times[0].month_name(), times[0].day, day
+        )
+        return tt_of_day</code></pre>
+</details>
+<div class="desc"><p>Elaborate PeMS data.</p>
+<p>Compute the travel times for each day.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>route</code></strong></dt>
+<dd>the number of the highway the data will be taken
+from. It has to be one of 101, 85, 880, 87, 17,
+280, 237 and 680.</dd>
+<dt><strong><code>way</code></strong></dt>
+<dd>the direction in which the traffic is considered.
+It has to be one of "N", "S" for the highways that go
+north to south, or one of "E", "W" for the highways
+that go west to east.</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="vickrey.real_data.tt_for_day.RealData.tt_for_day"><code class="name flex">
+<span>def <span class="ident">tt_for_day</span></span>(<span>self, day)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tt_for_day(self, day):
+    &#34;&#34;&#34;Find the travel times for a given day.
+
+    Args:
+        day: Day for which the travel times are extracted
+
+    Returns:
+        tt_of_day: series containing the travel time for the given
+            day
+    &#34;&#34;&#34;
+    tt_minutes = self.travel_times.dt.seconds / 60
+    times = tt_minutes[tt_minutes.index.day_of_year == day].index
+    if times[0].dayofweek &gt;= 5:
+        warnings.warn(
+            &#34;Warning: in year 2017, &#34;
+            f&#34;day {day} is a {times[0].day_name()}. &#34;
+            &#34;You may not want to compute travel times for a weekend day&#34;
+        )
+    tt_of_day = tt_minutes[times]
+    tt_of_day.index = (tt_of_day.index - tt_of_day.index[0]).seconds / 60
+    tt_of_day.name = &#34;{}, {} {} ({})&#34;.format(
+        times[0].day_name(), times[0].month_name(), times[0].day, day
+    )
+    return tt_of_day</code></pre>
+</details>
+<div class="desc"><p>Find the travel times for a given day.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>day</code></strong></dt>
+<dd>Day for which the travel times are extracted</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tt_of_day</code></dt>
+<dd>series containing the travel time for the given
+day</dd>
+</dl></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="vickrey.real_data" href="index.html">vickrey.real_data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="vickrey.real_data.tt_for_day.RealData" href="#vickrey.real_data.tt_for_day.RealData">RealData</a></code></h4>
+<ul class="">
+<li><code><a title="vickrey.real_data.tt_for_day.RealData.tt_for_day" href="#vickrey.real_data.tt_for_day.RealData.tt_for_day">tt_for_day</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

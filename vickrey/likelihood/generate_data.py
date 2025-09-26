@@ -98,11 +98,11 @@ def find_td(travel_time):
 def generate_arrival(
     n,
     travel_time,
-    mu_beta=0.7,
-    mu_gamma=1.2,
-    mu_t=9.5,
-    sigma=0.1,
-    sigma_t=1,
+    mu_beta,
+    mu_gamma,
+    mu_t,
+    sigma,
+    sigma_t,
     full_output=False,
     seed=None,
 ):

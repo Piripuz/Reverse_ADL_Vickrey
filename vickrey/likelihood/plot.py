@@ -72,7 +72,7 @@ def plot_contour(
     return contour
 
 
-def plot_hist(tt, t_as, par, ax=None, par2=None):
+def plot_hist(tt, t_as, par, ax=None, par2=None, bins=80):
     """Plot an histogram of arrival times, with the likelihood of them.
 
     Args:
@@ -86,10 +86,11 @@ def plot_hist(tt, t_as, par, ax=None, par2=None):
             used.
         par2: Second set of parameters, to compare the likelihoods
             coming from two different parameter values.
+        bins: Number of bins to use when plotting the histogram.
     """
     if ax is None:
         ax = plt.gca()
-    hist = ax.hist(t_as, 80, label="Arrival times")
+    hist = ax.hist(t_as, bins, label="Arrival times")
 
     x = np.linspace(t_as.min(), t_as.max(), 200)
     liks = total_liks(tt, x)(*par)

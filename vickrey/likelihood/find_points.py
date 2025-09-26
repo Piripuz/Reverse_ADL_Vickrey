@@ -67,14 +67,19 @@ def find_be(b_i, travel_time):
 
 
 def find_b0(t_a, travel_time):
-    """Given an arrival time, finds the maximal beta such that the
-    arrival time is a kink equilibrium for every value higher than the
-    one returned.
+    r"""Find the value of the parameter b0.
 
-    Finds the parameter by bisection.
+    The value of the parameter is the maximal value of $\beta$ such that the
+    arrival time is a kink equilibrium for every value higher than it.
 
+    Args:
+        t_a: Desired arrival time for which the parameter is computed.
+        travel_time: Instance of the TravelTime class, representing
+            the travel time function for which the calculation is made.
+
+    Returns:
+        sol: Value of the parameter.
     """
-
     # A really low and a really high value are defined as starting
     # points for the bisection
     min = 1e-2
@@ -103,16 +108,17 @@ def find_b0(t_a, travel_time):
 
 
 def find_gs(gamma, travel_time):
-    """Given a travel time function and a gamma value,
-    finds the interval in which the optimal arrival time is constant
-    (and there are thus no kink minima).
+    r"""Find the bounds of the Critical Late Arrival interval.
 
-    Returns a couple containing initial and final points of the interval.
+    Args:
+        gamma: Value of the late arrival penalty, for which the interval
+            is computed. It is required for gamma to be lower than
+            the value of $\gamma_{max}$.
+        travel_time: Instance of the TravelTime class, representing
+            the travel time function for which the calculation is made.
 
-    NOTE: This function's result will be meaningless if called on
-    values of gamma greater than the maximum steep of the negative
-    travel time function. Don't do that
-
+    Returns:
+        g_i, g_e: Bounds of the CLA interval.
     """
 
     # A gradient descent algorithm finds the final point
@@ -132,6 +138,16 @@ def find_gs(gamma, travel_time):
 
 
 def find_gi(g_e, travel_time):
+    """Find the initial point of an CEA interval ending at g_e.
+
+    Args:
+        g_e: Initial point of the early arrival interval.
+        travel_time: Instance of the TravelTime class, for which the
+            interval is computed.
+
+    Returns:
+        b_e: Ending point of the early arrival interval starting at b_i.
+    """
     # The initial point is found where the line starting from the
     # final point, whith slope -gamma, crosses the travel time
     # function.
@@ -150,14 +166,19 @@ def find_gi(g_e, travel_time):
 
 
 def find_g0(t_a, travel_time):
-    """Given an arrival time, finds the maximal gamma such that the
-    arrival time is a kink equilibrium for every value lower than the
-    one returned.
+    r"""Find the value of the parameter g0.
 
-    Finds the parameter by bisection.
+    The value of the parameter is the maximal value of $\gamma$ such that the
+    arrival time is a kink equilibrium for every value higher than it.
 
+    Args:
+        t_a: Desired arrival time for which the parameter is computed.
+        travel_time: Instance of the TravelTime class, representing
+            the travel time function for which the calculation is made.
+
+    Returns:
+        sol: Value of the parameter.
     """
-
     # A really low and a really high value are defined as starting
     # points for the bisection
     min = 1e-2
@@ -186,6 +207,7 @@ def find_g0(t_a, travel_time):
 
 
 def find_ts(beta, gamma, travel_time):
+    r"""Find the value of the point $\bar{t^*}$."""
     gamma += 1e-15
     beta += 1e-15
     # Here, calls to find_bs and find_gs with invalid values have to

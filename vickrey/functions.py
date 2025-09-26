@@ -1,10 +1,13 @@
+"""Functions used to approximate real data."""
+
 from jax import numpy as jnp
-from jax.scipy.stats import gennorm as jgennorm
 from jax.lax import logistic
 from jax import grad
 
 
 def gennorm(x, beta, mu, sigma):
+    """JAX implementation of an unscaled generalized normal pdf."""
+
     def pdf_unscaled(x, b):
         return jnp.exp(-(jnp.abs(x) ** b))
 
@@ -13,6 +16,8 @@ def gennorm(x, beta, mu, sigma):
 
 
 def skewnorm(x, a, mu, sigma):
+    """Faster function similar to an unscaled skewed norm pdf."""
+
     def pdf_unscaled(x):
         return 2 * jnp.exp(-(x**2)) * logistic(a * x)
 
@@ -20,15 +25,8 @@ def skewnorm(x, a, mu, sigma):
     return pdf_unscaled(y) / sigma
 
 
-def skewgennorm(x, a, beta, mu, sigma):
-    def pdf_unscaled(x, beta):
-        return 2 * jgennorm.pdf(x, beta) * jgennorm.cdf(a * x, beta)
-
-    y = (x - mu) / sigma
-    return pdf_unscaled(y, beta) / sigma
-
-
 def skewgennorm_fake(x, a, beta, mu, sigma):
+    """Function with the properties of generalized and skewed normal pdf."""
     y = (x - mu) / sigma
     gen = gennorm(y, beta, 0, 1)
     log = logistic(a * y)

@@ -1,3 +1,5 @@
+"""Various utilities for the vickrey package."""
+
 from jax import grad, vmap
 import jax.numpy as jnp
 
@@ -7,7 +9,16 @@ from datetime import datetime
 
 
 class TravelTime:
+    """Structure for a travel time function."""
+
     def __init__(self, function, df=None, d2f=None):
+        """Save the travel time function, and computes relevant coefficients.
+
+        Args:
+            function: Travel time provile function.
+            df (optional): First derivative of the function
+            d2f (optional): second derivative of the function
+        """
         self.f = function
         if df is None:
             self.df = grad(function)
@@ -31,6 +42,8 @@ class TravelTime:
 
 
 def steps(high=0.1, nhigh=200, small=0.01, nsmall=450, vsmall=1e-3):
+    """Return a varying step size to be used in iterative optimizers."""
+
     def inner_step(iter_num):
         return jnp.where(
             iter_num < nhigh,

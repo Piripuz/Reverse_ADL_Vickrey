@@ -1,3 +1,5 @@
+"""Functions for fitting travel time functions to data."""
+
 import numpy as np
 from scipy.optimize import curve_fit
 
@@ -10,6 +12,20 @@ from vickrey.functions import gennorm, skewnorm, skewgennorm_fake, comp_hyp
 
 
 def fit_to_data(x, y, kind="hyperbola", init=None):
+    """Fit the function of the choosen kind to the given data.
+
+    Args:
+        x, y: Coordinates of the data the function is fitted too.
+        kind: Kind of function to fit to the data. The supported kinds
+            are "hyperbola", "skewed_gaussian", "generalized_gaussian",
+            "generalized_skewed_gaussian" and "skewed_generalized_gaussian".
+        init: Initialization parameters for the function. If parameters
+            are not provided, they will be automatically detected
+            from the provided data.
+
+    Returns:
+        function: Fitted function.
+    """
     if init is None:
         # Regardless of the type of function, the bounds of the travel
         # time peak are looked for:

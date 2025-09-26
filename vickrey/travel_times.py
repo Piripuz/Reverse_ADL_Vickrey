@@ -1,7 +1,11 @@
+"""Collection of functions expressing a theoretical travel time profile."""
+
 import jax.numpy as jnp
 
 
 def asymm_gaussian(sigma_l=0.9, sigma_r=0.2, mu=9.5):
+    """Piecewise defined function, made of two different gaussians."""
+
     def left_gau(x):
         return jnp.exp(-((x - mu) ** 2) / sigma_l**2)
 
@@ -12,6 +16,8 @@ def asymm_gaussian(sigma_l=0.9, sigma_r=0.2, mu=9.5):
 
 
 def asymm_gaussian_plateau(sigma_l=0.9, sigma_r=0.2, mu=9.5, plateau_len=3):
+    """Asymmetric gaussian with a constant zone at the maximum."""
+
     def left_gau(x):
         return jnp.exp(-((x - mu) ** 2) / sigma_l**2)
 

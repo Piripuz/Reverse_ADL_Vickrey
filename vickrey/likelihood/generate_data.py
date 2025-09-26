@@ -1,3 +1,5 @@
+"""Function related to the explicit minimization of the cost."""
+
 import jax.numpy as jnp
 from jax import vmap
 

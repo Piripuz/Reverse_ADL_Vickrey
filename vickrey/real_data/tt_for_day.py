@@ -187,7 +187,7 @@ class RealData:
             )
         tt_of_day = tt_minutes[times]
         tt_of_day.index = (tt_of_day.index - tt_of_day.index[0]).seconds / 60
-        tt_of_day.name = "{}, {} {} ({})".format(
+        tt_of_day.name = "{}, {} {} ({:03})".format(
             times[0].day_name(), times[0].month_name(), times[0].day, day
         )
         return tt_of_day

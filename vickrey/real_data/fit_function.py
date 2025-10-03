@@ -213,6 +213,7 @@ def fit_to_data(x, y, kind="hyperbola", init=None):
             x,
             y,
             [a_init, beta_init, mu_init, sigma_init, scale_init, off_init],
+            maxfev=4000,
         )
         a, beta, mu, sigma, scale, off = popt
         print(

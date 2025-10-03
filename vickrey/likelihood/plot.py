@@ -72,7 +72,7 @@ def plot_contour(
     return contour
 
 
-def plot_hist(tt, t_as, par, ax=None, par2=None, bins=80):
+def plot_hist(tt, t_as, par, ax=None, par2=None, bins=80, factor=None):
     """Plot an histogram of arrival times, with the likelihood of them.
 
     Args:
@@ -81,38 +81,51 @@ def plot_hist(tt, t_as, par, ax=None, par2=None, bins=80):
         t_as: Vector of arrival time to plot in the histogram.
         par: Parameters from which the likelihood function will be
             plotted.
-        ax: matplotlib.pyplot.Axes instance, on which the histogram will
-            be plotted. If no axis is given, the current axis will be
-            used.
-        par2: Second set of parameters, to compare the likelihoods
+        ax (optional): matplotlib.pyplot.Axes instance, on which the
+            histogram will be plotted. If no axis is given, the current
+            axis will be used.
+        par2 (optional): Second set of parameters, to compare the likelihoods
             coming from two different parameter values.
-        bins: Number of bins to use when plotting the histogram.
+        bins (optional, default 80): Number of bins to use when plotting
+            the histogram.
+        factor (optional): A fixed multiplicative factor for plotting
+            the likelihood function. If not given, will be automatically
+            computed from the height of the histogram bins.
+
+    Returns:
+        hist: Plotted histogram
+        fill: Plotted zone, corresponding to the first set of parameters.
+        fill2: Plotted zone, corresponding to the second set of parameters.
     """
     if ax is None:
         ax = plt.gca()
-    hist = ax.hist(t_as, bins, label="Arrival times")
+    hist = ax.hist(t_as, bins, color="blue", label="Arrival times")
 
     x = np.linspace(t_as.min(), t_as.max(), 200)
     liks = total_liks(tt, x)(*par)
 
-    mult = hist[0].max() / liks.max()
-    ax.fill_between(
+    if factor is None:
+        factor = hist[0].max() / liks.max()
+    fill = ax.fill_between(
         x,
-        liks * mult,
-        color="green",
-        alpha=0.3,
+        liks * factor,
+        color="orange",
+        alpha=0.65,
         label="True likelihood value",
         edgecolor=None,
     )
     if par2 is not None:
         liks_wrong = total_liks(tt, x)(*par2)
-        ax.fill_between(
+        fill2 = ax.fill_between(
             x,
-            liks_wrong * mult,
+            liks_wrong * factor,
             color="red",
-            alpha=0.3,
+            alpha=0.75,
             label="Wrong likelihood value",
             edgecolor=None,
         )
 
     ax.legend()
+    if par2 is None:
+        return hist, fill
+    return hist, fill, fill2

@@ -42,12 +42,12 @@ def grid_search(
     """
     if value_sigma not in ("high", "low"):
         raise ValueError(
-            'The value of value_sigma, '
+            "The value of value_sigma, "
             f'which is {value_sigma}, is neither "high" nor "low".'
         )
     if value_sigma_t not in ("high", "low"):
         raise ValueError(
-            'The value of value_sigma_t, '
+            "The value of value_sigma_t, "
             f'which is {value_sigma_t}, is neither "high" nor "low".'
         )
 
@@ -139,8 +139,6 @@ def optim_cycle(t_as, tt, par=None):
 
     start = time()
     res = grad_free(t_as, tt, init)
-    if res.status:
-        breakpoint()
 
     print(
         "\n".join(

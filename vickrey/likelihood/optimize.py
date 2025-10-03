@@ -15,28 +15,47 @@ def grid_search(
     num_mu_beta=4,
     num_mu_gamma=4,
     num_mu_t=3,
-    num_sigma=4,
+    value_sigma="high",
+    value_sigma_t="high",
 ):
-    """Perform a grid search over the likelihood parameters.
+    r"""Perform a grid search over the likelihood parameters.
 
-    The bounds of the grid are automatically defined,
-    based on the provided travel time function.
+    The grid search will not be performed over the variances, as this
+    leads to a bias towards local minima with high variances.
+    The bounds of the grid are automatically defined, based on
+    the provided travel time function.
 
     Args:
         t_as: Vector of arrival times.
         tt: Instance of the TravelTime class to perform the grid search on.
-        num_mu_beta, num_mu_gamma, num_mu_t, num_sigma, num_sigma_t:
-            Length of the grid, in each dimension.
+        num_mu_beta: Length of the grid, in the dimension $\mu_\beta$
+        num_mu_gamma: Length of the grid, in the dimension $\mu_\gamma$
+        num_mu_t: Length of the grid, in the dimension $t^*$
+        value_sigma: Value of the fixed parameter $\sigma$. Can assume
+            the values "high" or "low"
+        value_sigma_t: Value of the fixed parameter $\sigma_t$. Can assume
+            the values "high" or "low"
 
     Returns:
         init: Result of the grid search.
 
     """
+    if value_sigma not in ("high", "low"):
+        raise ValueError(
+            'The value of value_sigma, '
+            f'which is {value_sigma}, is neither "high" nor "low".'
+        )
+    if value_sigma_t not in ("high", "low"):
+        raise ValueError(
+            'The value of value_sigma_t, '
+            f'which is {value_sigma_t}, is neither "high" nor "low".'
+        )
+
     g_betas = jnp.linspace(0.01, tt.maxb, num_mu_beta)
     g_gammas = jnp.linspace(0.01, tt.maxg, num_mu_gamma)
     g_ts = jnp.linspace(6, 11, num_mu_t)
-    g_sigmas = jnp.linspace(0.01, 0.2, num_sigma)
-    g_sigmats = jnp.r_[1.0]
+    g_sigmas = jnp.r_[0.1] if value_sigma == "high" else jnp.r_[0.01]
+    g_sigmats = jnp.r_[1.0] if value_sigma_t == "high" else jnp.r_[0.1]
 
     mesh_par = jnp.meshgrid(g_betas, g_gammas, g_ts, g_sigmas, g_sigmats)
 

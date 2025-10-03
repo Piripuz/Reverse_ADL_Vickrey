@@ -143,14 +143,14 @@ automatically determined from a list of predefined bounds.</p>
 </dl></div>
 </dd>
 <dt id="vickrey.likelihood.plot.plot_hist"><code class="name flex">
-<span>def <span class="ident">plot_hist</span></span>(<span>tt, t_as, par, ax=None, par2=None, bins=80)</span>
+<span>def <span class="ident">plot_hist</span></span>(<span>tt, t_as, par, ax=None, par2=None, bins=80, factor=None)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def plot_hist(tt, t_as, par, ax=None, par2=None, bins=80):
+<pre><code class="python">def plot_hist(tt, t_as, par, ax=None, par2=None, bins=80, factor=None):
     &#34;&#34;&#34;Plot an histogram of arrival times, with the likelihood of them.
 
     Args:
@@ -159,41 +159,54 @@ automatically determined from a list of predefined bounds.</p>
         t_as: Vector of arrival time to plot in the histogram.
         par: Parameters from which the likelihood function will be
             plotted.
-        ax: matplotlib.pyplot.Axes instance, on which the histogram will
-            be plotted. If no axis is given, the current axis will be
-            used.
-        par2: Second set of parameters, to compare the likelihoods
+        ax (optional): matplotlib.pyplot.Axes instance, on which the
+            histogram will be plotted. If no axis is given, the current
+            axis will be used.
+        par2 (optional): Second set of parameters, to compare the likelihoods
             coming from two different parameter values.
-        bins: Number of bins to use when plotting the histogram.
+        bins (optional, default 80): Number of bins to use when plotting
+            the histogram.
+        factor (optional): A fixed multiplicative factor for plotting
+            the likelihood function. If not given, will be automatically
+            computed from the height of the histogram bins.
+
+    Returns:
+        hist: Plotted histogram
+        fill: Plotted zone, corresponding to the first set of parameters.
+        fill2: Plotted zone, corresponding to the second set of parameters.
     &#34;&#34;&#34;
     if ax is None:
         ax = plt.gca()
-    hist = ax.hist(t_as, bins, label=&#34;Arrival times&#34;)
+    hist = ax.hist(t_as, bins, color=&#34;blue&#34;, label=&#34;Arrival times&#34;)
 
     x = np.linspace(t_as.min(), t_as.max(), 200)
     liks = total_liks(tt, x)(*par)
 
-    mult = hist[0].max() / liks.max()
-    ax.fill_between(
+    if factor is None:
+        factor = hist[0].max() / liks.max()
+    fill = ax.fill_between(
         x,
-        liks * mult,
-        color=&#34;green&#34;,
-        alpha=0.3,
+        liks * factor,
+        color=&#34;orange&#34;,
+        alpha=0.65,
         label=&#34;True likelihood value&#34;,
         edgecolor=None,
     )
     if par2 is not None:
         liks_wrong = total_liks(tt, x)(*par2)
-        ax.fill_between(
+        fill2 = ax.fill_between(
             x,
-            liks_wrong * mult,
+            liks_wrong * factor,
             color=&#34;red&#34;,
-            alpha=0.3,
+            alpha=0.75,
             label=&#34;Wrong likelihood value&#34;,
             edgecolor=None,
         )
 
-    ax.legend()</code></pre>
+    ax.legend()
+    if par2 is None:
+        return hist, fill
+    return hist, fill, fill2</code></pre>
 </details>
 <div class="desc"><p>Plot an histogram of arrival times, with the likelihood of them.</p>
 <h2 id="args">Args</h2>
@@ -206,15 +219,29 @@ time function to plot the likelihood for.</dd>
 <dt><strong><code>par</code></strong></dt>
 <dd>Parameters from which the likelihood function will be
 plotted.</dd>
-<dt><strong><code>ax</code></strong></dt>
-<dd>matplotlib.pyplot.Axes instance, on which the histogram will
-be plotted. If no axis is given, the current axis will be
-used.</dd>
-<dt><strong><code>par2</code></strong></dt>
+<dt><strong><code>ax</code></strong> :&ensp;<code>optional</code></dt>
+<dd>matplotlib.pyplot.Axes instance, on which the
+histogram will be plotted. If no axis is given, the current
+axis will be used.</dd>
+<dt><strong><code>par2</code></strong> :&ensp;<code>optional</code></dt>
 <dd>Second set of parameters, to compare the likelihoods
 coming from two different parameter values.</dd>
-<dt><strong><code>bins</code></strong></dt>
-<dd>Number of bins to use when plotting the histogram.</dd>
+<dt><strong><code>bins</code></strong> :&ensp;<code>optional</code>, default <code>80</code></dt>
+<dd>Number of bins to use when plotting
+the histogram.</dd>
+<dt><strong><code>factor</code></strong> :&ensp;<code>optional</code></dt>
+<dd>A fixed multiplicative factor for plotting
+the likelihood function. If not given, will be automatically
+computed from the height of the histogram bins.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>hist</code></dt>
+<dd>Plotted histogram</dd>
+<dt><code>fill</code></dt>
+<dd>Plotted zone, corresponding to the first set of parameters.</dd>
+<dt><code>fill2</code></dt>
+<dd>Plotted zone, corresponding to the second set of parameters.</dd>
 </dl></div>
 </dd>
 </dl>

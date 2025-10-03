@@ -110,7 +110,7 @@ print the current parameter values.</dd>
 </dl></div>
 </dd>
 <dt id="vickrey.likelihood.optimize.grid_search"><code class="name flex">
-<span>def <span class="ident">grid_search</span></span>(<span>t_as, tt, num_mu_beta=4, num_mu_gamma=4, num_mu_t=3, num_sigma=4)</span>
+<span>def <span class="ident">grid_search</span></span>(<span>t_as,<br>tt,<br>num_mu_beta=4,<br>num_mu_gamma=4,<br>num_mu_t=3,<br>value_sigma='high',<br>value_sigma_t='high')</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -123,28 +123,47 @@ print the current parameter values.</dd>
     num_mu_beta=4,
     num_mu_gamma=4,
     num_mu_t=3,
-    num_sigma=4,
+    value_sigma=&#34;high&#34;,
+    value_sigma_t=&#34;high&#34;,
 ):
-    &#34;&#34;&#34;Perform a grid search over the likelihood parameters.
+    r&#34;&#34;&#34;Perform a grid search over the likelihood parameters.
 
-    The bounds of the grid are automatically defined,
-    based on the provided travel time function.
+    The grid search will not be performed over the variances, as this
+    leads to a bias towards local minima with high variances.
+    The bounds of the grid are automatically defined, based on
+    the provided travel time function.
 
     Args:
         t_as: Vector of arrival times.
         tt: Instance of the TravelTime class to perform the grid search on.
-        num_mu_beta, num_mu_gamma, num_mu_t, num_sigma, num_sigma_t:
-            Length of the grid, in each dimension.
+        num_mu_beta: Length of the grid, in the dimension $\mu_\beta$
+        num_mu_gamma: Length of the grid, in the dimension $\mu_\gamma$
+        num_mu_t: Length of the grid, in the dimension $t^*$
+        value_sigma: Value of the fixed parameter $\sigma$. Can assume
+            the values &#34;high&#34; or &#34;low&#34;
+        value_sigma_t: Value of the fixed parameter $\sigma_t$. Can assume
+            the values &#34;high&#34; or &#34;low&#34;
 
     Returns:
         init: Result of the grid search.
 
     &#34;&#34;&#34;
+    if value_sigma not in (&#34;high&#34;, &#34;low&#34;):
+        raise ValueError(
+            &#34;The value of value_sigma, &#34;
+            f&#39;which is {value_sigma}, is neither &#34;high&#34; nor &#34;low&#34;.&#39;
+        )
+    if value_sigma_t not in (&#34;high&#34;, &#34;low&#34;):
+        raise ValueError(
+            &#34;The value of value_sigma_t, &#34;
+            f&#39;which is {value_sigma_t}, is neither &#34;high&#34; nor &#34;low&#34;.&#39;
+        )
+
     g_betas = jnp.linspace(0.01, tt.maxb, num_mu_beta)
     g_gammas = jnp.linspace(0.01, tt.maxg, num_mu_gamma)
     g_ts = jnp.linspace(6, 11, num_mu_t)
-    g_sigmas = jnp.linspace(0.01, 0.2, num_sigma)
-    g_sigmats = jnp.r_[1.0]
+    g_sigmas = jnp.r_[0.1] if value_sigma == &#34;high&#34; else jnp.r_[0.01]
+    g_sigmats = jnp.r_[1.0] if value_sigma_t == &#34;high&#34; else jnp.r_[0.1]
 
     mesh_par = jnp.meshgrid(g_betas, g_gammas, g_ts, g_sigmas, g_sigmats)
 
@@ -164,17 +183,29 @@ print the current parameter values.</dd>
     return init</code></pre>
 </details>
 <div class="desc"><p>Perform a grid search over the likelihood parameters.</p>
-<p>The bounds of the grid are automatically defined,
-based on the provided travel time function.</p>
+<p>The grid search will not be performed over the variances, as this
+leads to a bias towards local minima with high variances.
+The bounds of the grid are automatically defined, based on
+the provided travel time function.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>t_as</code></strong></dt>
 <dd>Vector of arrival times.</dd>
 <dt><strong><code>tt</code></strong></dt>
 <dd>Instance of the TravelTime class to perform the grid search on.</dd>
+<dt><strong><code>num_mu_beta</code></strong></dt>
+<dd>Length of the grid, in the dimension $\mu_\beta$</dd>
+<dt><strong><code>num_mu_gamma</code></strong></dt>
+<dd>Length of the grid, in the dimension $\mu_\gamma$</dd>
+<dt><strong><code>num_mu_t</code></strong></dt>
+<dd>Length of the grid, in the dimension $t^*$</dd>
+<dt><strong><code>value_sigma</code></strong></dt>
+<dd>Value of the fixed parameter $\sigma$. Can assume
+the values "high" or "low"</dd>
+<dt><strong><code>value_sigma_t</code></strong></dt>
+<dd>Value of the fixed parameter $\sigma_t$. Can assume
+the values "high" or "low"</dd>
 </dl>
-<p>num_mu_beta, num_mu_gamma, num_mu_t, num_sigma, num_sigma_t:
-Length of the grid, in each dimension.</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>init</code></dt>
@@ -218,8 +249,6 @@ Length of the grid, in each dimension.</p>
 
     start = time()
     res = grad_free(t_as, tt, init)
-    if res.status:
-        breakpoint()
 
     print(
         &#34;\n&#34;.join(

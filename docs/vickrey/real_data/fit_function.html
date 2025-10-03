@@ -257,6 +257,7 @@ el.replaceWith(d);
             x,
             y,
             [a_init, beta_init, mu_init, sigma_init, scale_init, off_init],
+            maxfev=4000,
         )
         a, beta, mu, sigma, scale, off = popt
         print(

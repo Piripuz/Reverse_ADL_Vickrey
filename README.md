@@ -1,6 +1,6 @@
 # Reverse ADL-Vickrey
 
-This repository hosts all the code used in the paper ().
+This repository hosts all the code used in the paper [Recovering Scheduling Preferences in Dynamic Departure Time Models](https://doi.org/10.1140/epjds/s13688-025-00608-z).
 The code allows estimation of the users' scheduling delays preferences, 
 as well as desired arrival time and their variances, from data about arrival time.
 The estimation is done by performing a Maximum Likelihood Estimation.
